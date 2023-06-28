@@ -86,7 +86,7 @@ class Wishlist(db.Model):
         """
         try:
             self.user_id = data["user_id"]
-            self.wishlist_name = data["name"]
+            self.wishlist_name = data["wishlist_name"]
             item_list = data.get("wishlist_items")
             for json_item in item_list:
                 item = Item()
