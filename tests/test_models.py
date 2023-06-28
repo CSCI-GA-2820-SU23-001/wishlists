@@ -6,7 +6,7 @@ import os
 import logging
 import unittest
 from service import app
-from service.models import Wishlist, Item, DataValidationError, db
+from service.models import Wishlist, Product, DataValidationError, db
 from tests.factories import WishlistFactory
 
 DATABASE_URI = os.getenv(
@@ -35,7 +35,7 @@ class TestWishlist(unittest.TestCase):
     def setUp(self):
         """ This runs before each test """
         db.session.query(Wishlist).delete()  # clean up the last tests
-        db.session.query(Item).delete()  # clean up the last tests
+        db.session.query(Product).delete()  # clean up the last tests
         db.session.commit()
 
     def tearDown(self):
