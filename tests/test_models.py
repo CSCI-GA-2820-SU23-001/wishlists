@@ -70,3 +70,12 @@ class TestWishlist(unittest.TestCase):
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 1)
         
+    def test_list_all_wishlists(self):
+        """It should List all Wishlists in the database"""
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+        for wishlist in WishlistFactory.create_batch(5):
+            wishlist.create()
+        # Assert that there are now 5 wishlists in the database
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 5)
