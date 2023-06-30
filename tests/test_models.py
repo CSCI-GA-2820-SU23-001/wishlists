@@ -13,9 +13,12 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
 )
 
+
 ######################################################################
 #  Wishlist   M O D E L   T E S T   C A S E S
 ######################################################################
+
+
 class TestWishlist(unittest.TestCase):
     """ Test Cases for Wishlist Model """
 
@@ -40,6 +43,8 @@ class TestWishlist(unittest.TestCase):
 
     def tearDown(self):
         """ This runs after each test """
+        db.session.query(Wishlist).delete()  # clean up the last tests
+        db.session.query(Product).delete()  # clean up the last tests
         db.session.remove()
 
     ######################################################################
@@ -51,8 +56,8 @@ class TestWishlist(unittest.TestCase):
         fake_wishlist = WishlistFactory()
         # pylint: disable=unexpected-keyword-arg
         wishlist = Wishlist(
-            user_id = fake_wishlist.user_id,
-            wishlist_name = fake_wishlist.wishlist_name
+            user_id=fake_wishlist.user_id,
+            wishlist_name=fake_wishlist.wishlist_name
         )
         self.assertIsNotNone(wishlist)
         self.assertEqual(wishlist.id, None)
@@ -69,13 +74,13 @@ class TestWishlist(unittest.TestCase):
         self.assertIsNotNone(wishlist.id)
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 1)
-        
+
     def test_list_all_wishlists(self):
         """It should List all Wishlists in the database"""
         wishlists = Wishlist.all()
         self.assertEqual(wishlists, [])
-        for wishlist in WishlistFactory.create_batch(5):
+        for wishlist in WishlistFactory.create_batch(10):
             wishlist.create()
         # Assert that there are now 5 wishlists in the database
         wishlists = Wishlist.all()
-        self.assertEqual(len(wishlists), 5)
+        self.assertEqual(len(wishlists), 10)
