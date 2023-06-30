@@ -64,10 +64,10 @@ def create_wishlist():
     else:
         wishlist.deserialize(data)
         wishlist.create()
-        #message = wishlist.all()
         return make_response(
             "", status.HTTP_201_CREATED,
         )
+
 
 def check_content_type(media_type):
     """Checks that the media type is correct"""
