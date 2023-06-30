@@ -45,7 +45,7 @@ def list_all_wishlists():
 ######################################################################
 # CREATE A NEW WISHLIST
 ######################################################################
-@app.route("/wishlist", methods=["POST"])
+@app.route("/wishlists", methods=["POST"])
 def create_wishlist():
     """
     Creates an Account
@@ -59,13 +59,14 @@ def create_wishlist():
     data = request.get_json()
     if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
         abort(
-            status.HTTP_409_CONFLICT
+            status.HTTP_409_CONFLICT, f"Name: {data['wishlist_name']} has been taken.",
         )
     else:
         wishlist.deserialize(data)
         wishlist.create()
         return make_response(
-            "", status.HTTP_201_CREATED,
+            jsonify(wishlist.serialize()),
+            status.HTTP_201_CREATED
         )
 
 
