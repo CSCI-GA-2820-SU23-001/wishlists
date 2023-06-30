@@ -56,15 +56,18 @@ def create_wishlist():
 
     # Create the account
     wishlist = Wishlist()
-    wishlist.deserialize(request.get_json())
-    wishlist.create()
-
-    # Create a message to return
-    message = wishlist.serialize()
-
-    return make_response(
-        jsonify(message), status.HTTP_201_CREATED
-    )
+    data = request.get_json()
+    if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
+        abort(
+            status.HTTP_409_CONFLICT
+        )
+    else:
+        wishlist.deserialize(data)
+        wishlist.create()
+        #message = wishlist.all()
+        return make_response(
+            "", status.HTTP_201_CREATED,
+        )
 
 def check_content_type(media_type):
     """Checks that the media type is correct"""
