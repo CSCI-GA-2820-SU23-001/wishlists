@@ -92,3 +92,29 @@ class TestWishlistServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(len(data), 10)
+
+    def test_create_a_valid_wishlist(self):
+        wishlist = WishlistFactory()
+        resp = self.client.post(
+            "/wishlists", json=wishlist.serialize(), content_type="application/json"
+        )
+        self.assertEqual(
+            resp.status_code,
+            status.HTTP_201_CREATED,
+            "Could not create test Wishlist"
+        )
+        # TODO: check location exist
+
+        new_wishlist = resp.get_json()
+        # Do not need to check for wishlist id, since it will be assigned with unique id while creating one.
+        self.assertEqual(
+            new_wishlist["user_id"], wishlist.user_id, "wishlist user_id does not match"
+        )
+        self.assertEqual(
+            new_wishlist["wishlist_name"], wishlist.wishlist_name, "wishlist_name does not match"
+        )
+        self.assertEqual(
+            new_wishlist["wishlist_products"], wishlist.wishlist_products, "wishlist products does not match"
+        )
+
+        # TODO: check location was correct by getting it.

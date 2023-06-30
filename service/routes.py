@@ -47,6 +47,7 @@ def list_all_wishlists():
 ######################################################################
 @app.route("/wishlists", methods=["POST"])
 def create_wishlist():
+    # TODO Location for read/lookup wishlist
     """
     Creates an Account
     This endpoint will create an Account based the data in the body that is posted
@@ -64,9 +65,13 @@ def create_wishlist():
     else:
         wishlist.deserialize(data)
         wishlist.create()
+        # location_url = url_for()
         return make_response(
             jsonify(wishlist.serialize()),
-            status.HTTP_201_CREATED
+            status.HTTP_201_CREATED,
+            # {
+            #     "Location": location_url
+            # }
         )
 
 
