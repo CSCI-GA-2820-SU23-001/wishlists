@@ -30,16 +30,32 @@ class WishlistFactory(factory.Factory):
         model = Wishlist
 
     id = factory.Sequence(lambda n: n)
-    user_id = FuzzyChoice(range(1, 10))
-    wishlist_name = factory.Faker("name")
+    user_id = factory.Faker("random_number")
+    wishlist_name = factory.Faker("word")
     # the many side of relationships can be a little wonky in factory boy:
     # https://factoryboy.readthedocs.io/en/latest/recipes.html#simple-many-to-many-relationship
 
     @factory.post_generation
-    def addresses(self, create, extracted, **kwargs):   # pylint: disable=method-hidden, unused-argument
-        """Creates the addresses list"""
+    def products(self, create, extracted, **kwargs):   # pylint: disable=method-hidden, unused-argument
+        """Creates the products list"""
         if not create:
             return
 
         if extracted:
-            self.addresses = extracted
+            self.wishlist_products = extracted
+
+
+class ProductFactory(factory.Factory):
+    """Creates fake Addresses"""
+
+    # pylint: disable=too-few-public-methods
+    class Meta:
+        """Persistent class"""
+        model = Product
+
+    id = factory.Sequence(lambda n: n)
+    wishlist_id = None
+    product_id = factory.Faker("random_number")
+    product_name = factory.Faker("word")
+    product_price = factory.Faker("pyfloat")
+    account = factory.SubFactory(WishlistFactory)
