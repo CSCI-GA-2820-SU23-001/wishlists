@@ -25,7 +25,7 @@ class DataValidationError(Exception):
 class Wishlist(db.Model):
     """
     Class that represents a Wishlist
-    
+
     Schema Description:
     id = primary key for user-wishlist table
     user_id = id of the user who owns the wishlist
@@ -68,7 +68,7 @@ class Wishlist(db.Model):
     def serialize(self):
         """ Serializes a Wishlist into a dictionary """
         wishlist = {
-            "id": self.id, 
+            "id": self.id,
             "user_id": self.user_id,
             "wishlist_name": self.wishlist_name,
             "wishlist_products": []
@@ -88,10 +88,11 @@ class Wishlist(db.Model):
             self.user_id = data["user_id"]
             self.wishlist_name = data["wishlist_name"]
             product_list = data.get("wishlist_products")
-            for json_product in product_list:
-                product = Product()
-                product.deserialize(json_product)
-                self.wishlist_products.append(product)
+            if product_list is not None:
+                for json_product in product_list:
+                    product = Product()
+                    product.deserialize(json_product)
+                    self.wishlist_products.append(product)
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Wishlist: missing " + error.args[0]
@@ -139,7 +140,7 @@ class Wishlist(db.Model):
 class Product(db.Model):
     """
     Class that represents an Product
-    
+
     Schema Description:
     id = primary key for product-wishlist table
     wishlist_id = id of the wishlist the product is mapped to
@@ -187,12 +188,12 @@ class Product(db.Model):
         product = {
             "id": self.id,
             "wishlist_id": self.wishlist_id,
-            "product_id": self.product_id, 
+            "product_id": self.product_id,
             "product_name": self.product_name,
             "product_price": self.product_price
         }
         return product
-    
+
     def deserialize(self, data):
         """
         Deserializes a Wishlist from a dictionary
@@ -215,7 +216,7 @@ class Product(db.Model):
                 "Error message: " + error
             ) from error
         return self
-    
+
     @classmethod
     def init_db(cls, app):
         """ Initializes the database session """
@@ -246,4 +247,4 @@ class Product(db.Model):
             name (string): the name of the Product you want to match
         """
         logger.info("Processing name query for %s ...", by_name)
-        return cls.query.filter(cls.name == by_name)
+        return cls.query.filter(cls.wishlist_name == by_name)
