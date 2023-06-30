@@ -39,3 +39,40 @@ def list_all_wishlists():
     # Return as an array of JSON
     wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
     return make_response(jsonify(wishlists), status.HTTP_200_OK)
+# Place your REST API code here ...
+
+
+######################################################################
+# CREATE A NEW WISHLIST
+######################################################################
+@app.route("/wishlist", methods=["POST"])
+def create_wishlist():
+    """
+    Creates an Account
+    This endpoint will create an Account based the data in the body that is posted
+    """
+    app.logger.info("Request to create a Wishlist")
+    check_content_type("application/json")
+
+    # Create the account
+    wishlist = Wishlist()
+    wishlist.deserialize(request.get_json())
+    wishlist.create()
+
+    # Create a message to return
+    message = wishlist.serialize()
+
+    return make_response(
+        jsonify(message), status.HTTP_201_CREATED
+    )
+
+def check_content_type(media_type):
+    """Checks that the media type is correct"""
+    content_type = request.headers.get("Content-Type")
+    if content_type and content_type == media_type:
+        return
+    app.logger.error("Invalid Content-Type: %s", content_type)
+    abort(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        f"Content-Type must be {media_type}",
+    )
