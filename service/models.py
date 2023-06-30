@@ -87,6 +87,7 @@ class Wishlist(db.Model):
         try:
             self.user_id = data["user_id"]
             self.wishlist_name = data["wishlist_name"]
+
             product_list = data.get("wishlist_products")
             if product_list is not None:
                 for json_product in product_list:
