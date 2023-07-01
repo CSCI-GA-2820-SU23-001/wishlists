@@ -122,6 +122,6 @@ class TestWishlistServer(TestCase):
 
     def test_delete_wishlist(self):
         """ It should Delete a Wishlist"""
-        wishlist = WishlistFactory()
+        wishlist = self._create_wishlists(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{wishlist.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
