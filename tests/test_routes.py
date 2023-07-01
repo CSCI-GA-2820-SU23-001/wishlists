@@ -94,9 +94,10 @@ class TestWishlistServer(TestCase):
         self.assertEqual(len(data), 10)
 
     def test_create_a_valid_wishlist(self):
+        """It should create a wishlist"""
         wishlist = WishlistFactory()
         resp = self.client.post(
-            "/wishlists", json=wishlist.serialize(), content_type="application/json"
+            BASE_URL, json=wishlist.serialize(), content_type="application/json"
         )
         self.assertEqual(
             resp.status_code,
@@ -118,3 +119,9 @@ class TestWishlistServer(TestCase):
         )
 
         # TODO: check location was correct by getting it.
+
+    def test_delete_wishlist(self):
+        """ It should Delete a Wishlist"""
+        wishlist = self._create_wishlists(1)[0]
+        resp = self.client.delete(f"{BASE_URL}/{wishlist.id}")
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
