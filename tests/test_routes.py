@@ -125,3 +125,19 @@ class TestWishlistServer(TestCase):
         wishlist = self._create_wishlists(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{wishlist.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_rename_wishlist(self):
+        """ It should rename a Wishlist"""
+        wishlist = WishlistFactory()
+        res=self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+        #list created
+        new_wish = res.get_json()
+        logging.debug(new_wish)
+        list_id = new_wish["id"]
+        wishlist.wishlist_name = "new_Name"
+        res = self.client.put(f"{BASE_URL}/{list_id}", json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK,"Could not rename Wishlist")
+        updated_wishlist = res.get_json()
+        self.assertEqual(updated_wishlist["wishlist_name"], "new_Name")
+        
