@@ -128,16 +128,26 @@ class TestWishlistServer(TestCase):
 
     def test_rename_wishlist(self):
         """ It should rename a Wishlist"""
-        wishlist = WishlistFactory()
-        res=self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        #generate 2 wishlist and insert into db
+        wishlist1 = WishlistFactory()
+        wishlist2 = WishlistFactory()
+        res=self.client.post(BASE_URL, json=wishlist1.serialize(), content_type="application/json")
         self.assertEqual(res.status_code,status.HTTP_201_CREATED)
-        #list created
-        new_wish = res.get_json()
-        logging.debug(new_wish)
-        list_id = new_wish["id"]
-        wishlist.wishlist_name = "new_Name"
-        res = self.client.put(f"{BASE_URL}/{list_id}", json=wishlist.serialize(), content_type="application/json")
-        self.assertEqual(res.status_code, status.HTTP_200_OK,"Could not rename Wishlist")
-        updated_wishlist = res.get_json()
+        data1=res.get_json()
+        res=self.client.post(BASE_URL, json=wishlist2.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+        data2=res.get_json()
+
+        #update 2 data with same name. 1st should get 200 and 2nd should get 409
+        wishlist1.wishlist_name = "new_Name"
+        wishlist2.wishlist_name = "new_Name"
+        res1 = self.client.put(f"{BASE_URL}/{data1['id']}", json=wishlist1.serialize(), content_type="application/json")
+        self.assertEqual(res1.status_code, status.HTTP_200_OK,"Could not rename Wishlist1")
+        res2 = self.client.put(f"{BASE_URL}/{data2['id']}", json=wishlist2.serialize(), content_type="application/json")
+        self.assertEqual(res2.status_code, status.HTTP_409_CONFLICT,"Could not rename Wishlist2")
+
+        #check updated data
+        updated_wishlist = res1.get_json()
         self.assertEqual(updated_wishlist["wishlist_name"], "new_Name")
+
         

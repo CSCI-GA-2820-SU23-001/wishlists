@@ -102,13 +102,22 @@ def update_wishlist(wishlist_id):
     "update a wishlist"
     app.logger.info(f"Request to rename wishlist with id: {wishlist_id}")
     wishlist = Wishlist.find(wishlist_id)
+    
     if not wishlist:
-        app.abort(
+        abort(
             status.HTTP_404_NOT_FOUND,
             f"Wishlist with id '{wishlist_id}' was not found.",
         )
+    
     body = request.get_json()
     app.logger.info("Get body=%s", body)
+    update_wl=Wishlist.find_by_name(body['wishlist_name'])
+    if update_wl.count()>0:
+        abort(
+            status.HTTP_409_CONFLICT,
+            f"name '{body['wishlist_name']}'exist, rename fail.",
+        )
+    
     wishlist.deserialize(body)
     wishlist.update()
     app.logger.info(f"Wishlist with is: {wishlist_id} updated.")
