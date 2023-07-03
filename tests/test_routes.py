@@ -144,10 +144,13 @@ class TestWishlistServer(TestCase):
         res1 = self.client.put(f"{BASE_URL}/{data1['id']}", json=wishlist1.serialize(), content_type="application/json")
         self.assertEqual(res1.status_code, status.HTTP_200_OK,"Could not rename Wishlist1")
         res2 = self.client.put(f"{BASE_URL}/{data2['id']}", json=wishlist2.serialize(), content_type="application/json")
-        self.assertEqual(res2.status_code, status.HTTP_409_CONFLICT,"Could not rename Wishlist2")
+        self.assertEqual(res2.status_code, status.HTTP_409_CONFLICT,"rename Wishlist2, WRONG")
 
         #check updated data
-        updated_wishlist = res1.get_json()
-        self.assertEqual(updated_wishlist["wishlist_name"], "new_Name")
+        from service.models import Wishlist
+        wl1=Wishlist.find(data1['id']).wishlist_name
+        wl2=Wishlist.find(data2['id']).wishlist_name
+        self.assertEqual(wl1, "Newname")
+        self.assertNotEqual(wl2, "Newname")
 
         

@@ -101,6 +101,7 @@ def check_content_type(media_type):
 def update_wishlist(wishlist_id):
     "update a wishlist"
     app.logger.info(f"Request to rename wishlist with id: {wishlist_id}")
+    check_content_type("application/json")
     wishlist = Wishlist.find(wishlist_id)
     
     if not wishlist:
@@ -122,4 +123,4 @@ def update_wishlist(wishlist_id):
     wishlist.update()
     app.logger.info(f"Wishlist with is: {wishlist_id} updated.")
 
-    return wishlist.serialize(), status.HTTP_200_OK
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)

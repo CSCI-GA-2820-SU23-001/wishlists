@@ -37,7 +37,7 @@ class Wishlist(db.Model):
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    wishlist_name = db.Column(db.String(63), nullable=False)
+    wishlist_name = db.Column(db.String(63), nullable=False,unique=True)
     wishlist_products = db.relationship("Product", backref="wishlist", passive_deletes=True)
 
     def __repr__(self):
