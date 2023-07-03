@@ -77,17 +77,17 @@ def create_wishlist():
     check_content_type("application/json")
 
     # Create the account
-    # wishlist = Wishlist()
-    # data = request.get_json()
-    # if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
-    #     abort(
-    #         status.HTTP_409_CONFLICT, f"Name: {data['wishlist_name']} has been taken.",
-    #     )
-    # else:
     wishlist = Wishlist()
     data = request.get_json()
-    wishlist.deserialize(data)
-    wishlist.create()
+    if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
+        abort(
+            status.HTTP_409_CONFLICT, f"Name: {data['wishlist_name']} has been taken.",
+        )
+    else:
+        wishlist = Wishlist()
+        data = request.get_json()
+        wishlist.deserialize(data)
+        wishlist.create()
 
     app.logger.info("New wishlist %s created!", wishlist.wishlist_name)
     res=wishlist.serialize()
