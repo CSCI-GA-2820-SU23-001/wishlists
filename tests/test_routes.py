@@ -147,10 +147,9 @@ class TestWishlistServer(TestCase):
         self.assertEqual(res2.status_code, status.HTTP_409_CONFLICT,"rename Wishlist2, WRONG")
 
         #check updated data
-        from service.models import Wishlist
         wl1=Wishlist.find(data1['id']).wishlist_name
         wl2=Wishlist.find(data2['id']).wishlist_name
-        self.assertEqual(wl1, "Newname")
-        self.assertNotEqual(wl2, "Newname")
+        self.assertEqual(wl1, "new_Name")
+        self.assertNotEqual(wl2, "new_Name")
 
         
