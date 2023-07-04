@@ -15,9 +15,8 @@
 """
 Test Factory to make fake objects for testing
 """
-from datetime import date
 import factory
-from factory.fuzzy import FuzzyChoice, FuzzyDate
+from factory.fuzzy import FuzzyDecimal
 from service.models import Wishlist, Product
 
 
@@ -57,5 +56,5 @@ class ProductFactory(factory.Factory):
     wishlist_id = None
     product_id = factory.Faker("random_number")
     product_name = factory.Faker("word")
-    product_price = factory.Faker("pyfloat")
+    product_price = FuzzyDecimal(0, 100, 2)
     wishlist = factory.SubFactory(WishlistFactory)
