@@ -143,7 +143,7 @@ class TestWishlistServer(TestCase):
         resp = self.client.delete(f"{BASE_URL}/{wishlist.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
-     ######################################################################
+    ######################################################################
     #  P R O D U C T   T E S T   C A S E S
     ######################################################################
 
@@ -196,3 +196,28 @@ class TestWishlistServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_rename_wishlist(self):
+        """ It should rename a Wishlist"""
+        #generate 2 wishlist and insert into db
+        wishlist1 = WishlistFactory()
+        wishlist2 = WishlistFactory()
+        res=self.client.post(BASE_URL, json=wishlist1.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+        data1=res.get_json()
+        res=self.client.post(BASE_URL, json=wishlist2.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+        data2=res.get_json()
+
+        #update 2 data with same name. 1st should get 200 and 2nd should get 409
+        wishlist1.wishlist_name = "new_Name"
+        wishlist2.wishlist_name = "new_Name"
+        res1 = self.client.put(f"{BASE_URL}/{data1['id']}", json=wishlist1.serialize(), content_type="application/json")
+        self.assertEqual(res1.status_code, status.HTTP_200_OK,"Could not rename Wishlist1")
+        res2 = self.client.put(f"{BASE_URL}/{data2['id']}", json=wishlist2.serialize(), content_type="application/json")
+        self.assertEqual(res2.status_code, status.HTTP_409_CONFLICT,"rename Wishlist2, WRONG")
+
+        #check updated data
+        wl1=Wishlist.find(data1['id']).wishlist_name
+        wl2=Wishlist.find(data2['id']).wishlist_name
+        self.assertEqual(wl1, "new_Name")
+        self.assertNotEqual(wl2, "new_Name")
