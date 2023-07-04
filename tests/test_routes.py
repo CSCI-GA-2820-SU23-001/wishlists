@@ -196,6 +196,49 @@ class TestWishlistServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
+
+    def test_list_product_lin_wishlist(self):
+        """It should list all the products in a wishlist """
+        wishlist = self._create_wishlists(1)[0]
+        products = ProductFactory.create_batch(5)
+        for product in products:
+            resp = self.client.post(
+                f"{BASE_URL}/{wishlist.id}/products",
+                json=product.serialize(),
+                content_type="application/json",
+            )
+            self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+    # Retrieve the list of products in the wishlist
+        resp = self.client.get(
+            f"{BASE_URL}/{wishlist.id}/products",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        # Assert that the number of products in the response matches the number of added products
+        self.assertEqual(len(data), 5)
+
+        for i, product in enumerate(products):
+            self.assertEqual(data[i]['product_id'], product.product_id)
+            self.assertEqual(data[i]['product_name'], product.product_name)
+            self.assertEqual(data[i]['product_price'], product.product_price)
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def test_rename_wishlist(self):
         """ It should rename a Wishlist"""
         #generate 2 wishlist and insert into db

@@ -143,7 +143,7 @@ def create_product(wishlist_id):
 ######################################################################
 
 @app.route("/wishlists/<int:wishlist_id>/products", methods=["GET"])
-def list_product(wishlist_id):
+def list_products(wishlist_id):
     app.logger.info("Request to list all Products for a wishlist with id: %s", wishlist_id)
     wishlist = Wishlist.find(wishlist_id)
     if not wishlist:
@@ -151,7 +151,7 @@ def list_product(wishlist_id):
             status.HTTP_404_NOT_FOUND,
             f"Wishlist with id '{wishlist_id}' cannot be found.",
         )
-    res = [wishlist.serialize() for product in wishlist.wishlist_products]
+    res = [product.serialize() for product in wishlist.wishlist_products]
     return make_response(jsonify(res), status.HTTP_200_OK)
 
 ######################################################################
