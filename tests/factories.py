@@ -46,7 +46,7 @@ class WishlistFactory(factory.Factory):
 
 
 class ProductFactory(factory.Factory):
-    """Creates fake Addresses"""
+    """Creates fake Products"""
 
     # pylint: disable=too-few-public-methods
     class Meta:
@@ -58,4 +58,4 @@ class ProductFactory(factory.Factory):
     product_id = factory.Faker("random_number")
     product_name = factory.Faker("word")
     product_price = factory.Faker("pyfloat")
-    account = factory.SubFactory(WishlistFactory)
+    wishlist = factory.SubFactory(WishlistFactory)

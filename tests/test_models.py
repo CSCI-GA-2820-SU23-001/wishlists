@@ -1,5 +1,5 @@
 """
-Test cases for Wishlist Model
+Test cases for Wishlist Model and Product Model
 
 """
 import os
@@ -7,7 +7,7 @@ import logging
 import unittest
 from service import app
 from service.models import Wishlist, Product, DataValidationError, db
-from tests.factories import WishlistFactory
+from tests.factories import WishlistFactory, ProductFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -43,8 +43,8 @@ class TestWishlist(unittest.TestCase):
 
     def tearDown(self):
         """ This runs after each test """
-        db.session.query(Wishlist).delete()  # clean up the last tests
-        db.session.query(Product).delete()  # clean up the last tests
+        # db.session.query(Wishlist).delete()  # clean up the last tests
+        # db.session.query(Product).delete()  # clean up the last tests
         db.session.remove()
 
     ######################################################################
@@ -98,6 +98,60 @@ class TestWishlist(unittest.TestCase):
         wishlist.delete()
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 0)
+    
+    def test_add_wishlist_product(self):
+        """It should Create a wishlist with a product and add it to the database"""
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+
+        wishlist = WishlistFactory()
+        product = ProductFactory(wishlist=wishlist)
+        wishlist.wishlist_products.append(product)
+        wishlist.create()
+
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(wishlist.id)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+
+        new_wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(new_wishlist.wishlist_products), 1)
+        self.assertEqual(new_wishlist.wishlist_products[0].product_name,product.product_name)
+        self.assertEqual(new_wishlist.wishlist_products[0].product_price,product.product_price)
+
+        product2 = ProductFactory(wishlist=wishlist)
+        wishlist.wishlist_products.append(product2)
+        wishlist.update()
+
+        new_wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(new_wishlist.wishlist_products), 2)
+        self.assertEqual(new_wishlist.wishlist_products[1].product_name,product2.product_name)
+        self.assertEqual(new_wishlist.wishlist_products[1].product_price,product2.product_price)
+
+
+    def test_remove_wishlist_product(self):
+        """It should remove a product from wishlist"""
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+
+        wishlist = WishlistFactory()
+        product = ProductFactory(wishlist=wishlist)
+        wishlist.create()
+
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(wishlist.id)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find(wishlist.id)
+        product = wishlist.wishlist_products[0]
+        product.delete()
+        wishlist.update()
+
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(wishlist.wishlist_products), 0)
 
     def test_update_a_wishlist_name(self):
         """It should Update a wishlist name"""

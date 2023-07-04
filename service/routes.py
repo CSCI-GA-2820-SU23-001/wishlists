@@ -6,7 +6,7 @@ Describe what your service does here
 
 from flask import Flask, jsonify, request, url_for, make_response, abort
 from service.common import status  # HTTP Status Codes
-from service.models import Wishlist
+from service.models import Wishlist, Product
 
 # Import Flask application
 from . import app
@@ -28,6 +28,27 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+######################################################################
+# RETRIEVE AN WISHLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>", methods=["GET"])
+def get_wishlists(wishlist_id):
+    """
+    Retrieve a single wishlist
+
+    This endpoint will return an Wishlist based on it's id
+    """
+    app.logger.info("Request for Wishlist with id: %s", wishlist_id)
+
+    # See if the wishlist exists and abort if it doesn't
+    wishlist = Wishlist.find(wishlist_id)
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' could not be found.",
+        )
+
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
 
 ######################################################################
 #  LIST ALL WISHLISTS
@@ -49,13 +70,13 @@ def list_all_wishlists():
 def create_wishlist():
     # TODO Location for read/lookup wishlist
     """
-    Creates an Account
-    This endpoint will create an Account based the data in the body that is posted
+    Creates a Wishlist
+    This endpoint will create a wishlist based the data in the body that is posted
     """
     app.logger.info("Request to create a Wishlist")
     check_content_type("application/json")
 
-    # Create the account
+    # Create the wishlist
     wishlist = Wishlist()
     data = request.get_json()
     if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
@@ -63,16 +84,15 @@ def create_wishlist():
             status.HTTP_409_CONFLICT, f"Name: {data['wishlist_name']} has been taken.",
         )
     else:
+        wishlist = Wishlist()
+        data = request.get_json()
         wishlist.deserialize(data)
         wishlist.create()
-        # location_url = url_for()
-        return make_response(
-            jsonify(wishlist.serialize()),
-            status.HTTP_201_CREATED,
-            # {
-            #     "Location": location_url
-            # }
-        )
+
+    app.logger.info("New wishlist %s created!", wishlist.wishlist_name)
+    res=wishlist.serialize()
+    location_url = url_for("get_wishlists", wishlist_id = wishlist.id, _external=True)
+    return jsonify(res), status.HTTP_201_CREATED,{"Location": location_url}
 
 
 @app.route("/wishlists/<int:wishlist_id>", methods=["DELETE"])
@@ -84,6 +104,90 @@ def delete_wishlists(wishlist_id):
         wishlist.delete()
     return make_response("", status.HTTP_204_NO_CONTENT)
 
+# ---------------------------------------------------------------------
+#                P R O D U C T   M E T H O D S
+# ---------------------------------------------------------------------
+######################################################################
+# ADD A PRODUCT TO A WISHLIST
+######################################################################
+
+@app.route('/wishlists/<int:wishlist_id>/products', methods=['POST'])
+def create_product(wishlist_id):
+    """
+    Add a product to a wishlist
+    This endpoint will add a product to a wishlist.
+    """
+    app.logger.info("Request to add a Product for Wishlist with id: %s", wishlist_id)
+
+    wishlist = Wishlist.find(wishlist_id)
+
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' was not found.",
+        )
+
+    product = Product()
+    product.deserialize(request.get_json())
+
+    # adding to wishlist
+    wishlist.wishlist_products.append(product)
+    wishlist.update()
+
+    message = product.serialize()
+
+    return make_response(jsonify(message), status.HTTP_201_CREATED)
+
+######################################################################
+# LIST ALL PRODUCTS
+######################################################################
+
+@app.route("/wishlists/<int:wishlist_id>/products", methods=["GET"])
+def list_product(wishlist_id):
+    app.logger.info("Request to list all Products for a wishlist with id: %s", wishlist_id)
+    wishlist = Wishlist.find(wishlist_id)
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' cannot be found.",
+        )
+    res = [wishlist.serialize() for product in wishlist.wishlist_products]
+    return make_response(jsonify(res), status.HTTP_200_OK)
+
+######################################################################
+# RETRIEVE A PRODUCT FROM WISHLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/products/<int:product_id>", methods = ["GET"])
+def get_products(wishlist_id, product_id):
+    """
+    this endpoint returns a product in the wishlist
+    """
+    app.logger.info("Request to retrieve a product with id %s for Wishlist %s", product_id, wishlist_id)
+    product = Product.find(product_id)
+    if not product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
+
+    app.logger.info("Returning product: %s", product.id)
+    return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
+# DELETE A PRODUCT
+######################################################################
+@app.route('/wishlists/<int:wishlist_id>/products/<int:product_id>', methods=['DELETE'])
+def remove_product(wishlist_id, product_id):
+    """
+    Remove a product from a wishlist
+    This endpoint will remove a product from a wishlist.
+    """
+    app.logger.info("Request to delete product %s for Wishlist id: %s", wishlist_id, product_id)
+    product = Product.find(product_id)
+
+    if product:
+        product.delete()
+
+    app.logger.info("Product with ID [%s] is deleted from wishlist [%s]", product_id, wishlist_id)
+    return make_response("", status.HTTP_204_NO_CONTENT)
 
 def check_content_type(media_type):
     """Checks that the media type is correct"""
