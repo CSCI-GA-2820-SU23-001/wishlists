@@ -54,7 +54,7 @@ class ProductFactory(factory.Factory):
         model = Product
 
     id = factory.Sequence(lambda n: n)
-    wishlist_id = factory.LazyAttribute(lambda obj: obj.wishlist.id)
+    wishlist_id = None
     product_id = factory.Faker("random_number")
     product_name = factory.Faker("word")
     product_price = factory.Faker("pyfloat")

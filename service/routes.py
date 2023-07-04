@@ -29,7 +29,7 @@ def index():
 ######################################################################
 
 ######################################################################
-# RETRIEVE AN ACCOUNT
+# RETRIEVE AN WISHLIST
 ######################################################################
 @app.route("/wishlists/<int:wishlist_id>", methods=["GET"])
 def get_wishlists(wishlist_id):
@@ -40,12 +40,12 @@ def get_wishlists(wishlist_id):
     """
     app.logger.info("Request for Wishlist with id: %s", wishlist_id)
 
-    # See if the account exists and abort if it doesn't
+    # See if the wishlist exists and abort if it doesn't
     wishlist = Wishlist.find(wishlist_id)
     if not wishlist:
         abort(
             status.HTTP_404_NOT_FOUND,
-            f"Account with id '{wishlist_id}' could not be found.",
+            f"Wishlist with id '{wishlist_id}' could not be found.",
         )
 
     return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
@@ -76,7 +76,7 @@ def create_wishlist():
     app.logger.info("Request to create a Wishlist")
     check_content_type("application/json")
 
-    # Create the account
+    # Create the wishlist
     wishlist = Wishlist()
     data = request.get_json()
     if wishlist.find_by_name(data["wishlist_name"]).count() > 0:
