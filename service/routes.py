@@ -60,7 +60,6 @@ def list_all_wishlists():
     # Return as an array of JSON
     wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
     return make_response(jsonify(wishlists), status.HTTP_200_OK)
-# Place your REST API code here ...
 
 
 ######################################################################
@@ -103,6 +102,38 @@ def delete_wishlists(wishlist_id):
     if wishlist:
         wishlist.delete()
     return make_response("", status.HTTP_204_NO_CONTENT)
+
+######################################################################
+# RENAME A WISHLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>", methods=["PUT"])
+def update_wishlist(wishlist_id):
+    "update a wishlist"
+    app.logger.info(f"Request to rename wishlist with id: {wishlist_id}")
+    check_content_type("application/json")
+    wishlist = Wishlist.find(wishlist_id)
+    
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' was not found.",
+        )
+    
+    body = request.get_json()
+    app.logger.info("Get body=%s", body)
+    update_wl=Wishlist.find_by_name(body['wishlist_name'])
+    if update_wl.count()>0:
+        abort(
+            status.HTTP_409_CONFLICT,
+            f"name '{body['wishlist_name']}'exist, rename fail.",
+        )
+    
+    wishlist.deserialize(body)
+    wishlist.update()
+    app.logger.info(f"Wishlist with is: {wishlist_id} updated.")
+
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
+
 
 # ---------------------------------------------------------------------
 #                P R O D U C T   M E T H O D S
@@ -201,30 +232,3 @@ def check_content_type(media_type):
     )
 
 
-@app.route("/wishlists/<int:wishlist_id>", methods=["PUT"])
-def update_wishlist(wishlist_id):
-    "update a wishlist"
-    app.logger.info(f"Request to rename wishlist with id: {wishlist_id}")
-    check_content_type("application/json")
-    wishlist = Wishlist.find(wishlist_id)
-    
-    if not wishlist:
-        abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Wishlist with id '{wishlist_id}' was not found.",
-        )
-    
-    body = request.get_json()
-    app.logger.info("Get body=%s", body)
-    update_wl=Wishlist.find_by_name(body['wishlist_name'])
-    if update_wl.count()>0:
-        abort(
-            status.HTTP_409_CONFLICT,
-            f"name '{body['wishlist_name']}'exist, rename fail.",
-        )
-    
-    wishlist.deserialize(body)
-    wishlist.update()
-    app.logger.info(f"Wishlist with is: {wishlist_id} updated.")
-
-    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
