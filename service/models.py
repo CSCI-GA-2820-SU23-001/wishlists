@@ -22,12 +22,6 @@ class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
 
 
-
-
-
-
-
-
 class Product(db.Model):
     """
     Class that represents an Product
@@ -85,7 +79,7 @@ class Product(db.Model):
         }
         return product
 
-    def deserialize(self, data:dict) -> None:
+    def deserialize(self, data: dict) -> None:
         """
         Deserializes a Wishlist from a dictionary
 
@@ -131,6 +125,18 @@ class Product(db.Model):
         return cls.query.get(by_id)
 
     @classmethod
+    def find_all(cls, product_id):
+        """ Finds all products by the ID """
+        logger.info("Processing lookup for product id %s ...", product_id)
+        return cls.query.filter_by(product_id=product_id).all()
+
+    @classmethod
+    def find_product_wl(cls, product_id, wishlist_id):
+        """ Finds the product by the product_id and wishlist_id """
+        logger.info("Processing lookup for product id %s and wishlist id %s ...", product_id, wishlist_id)
+        return cls.query.filter_by(product_id=product_id, wishlist_id=wishlist_id).first()
+
+    @classmethod
     def find_by_name(cls, by_name):
         """Returns all Products with the given name
 
@@ -156,7 +162,7 @@ class Wishlist(db.Model):
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    wishlist_name = db.Column(db.String(63), nullable=False,unique=True)
+    wishlist_name = db.Column(db.String(63), nullable=False, unique=True)
     wishlist_products = db.relationship("Product", backref="wishlist", passive_deletes=True)
 
     def __repr__(self):
@@ -196,7 +202,7 @@ class Wishlist(db.Model):
             wishlist["wishlist_products"].append(product.serialize())
         return wishlist
 
-    def deserialize(self, data:dict) -> None:
+    def deserialize(self, data: dict) -> None:
         """
         Deserializes a Wishlist from a dictionary
 
@@ -255,4 +261,3 @@ class Wishlist(db.Model):
         """
         logger.info("Processing name query for %s ...", by_name)
         return cls.query.filter(cls.wishlist_name == by_name)
-

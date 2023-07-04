@@ -53,6 +53,8 @@ def get_wishlists(wishlist_id):
 ######################################################################
 #  LIST ALL WISHLISTS
 ######################################################################
+
+
 @app.route("/wishlists", methods=["GET"])
 def list_all_wishlists():
     """Retrieves all of Wishlists from the database"""
@@ -89,9 +91,9 @@ def create_wishlist():
         wishlist.create()
 
     app.logger.info("New wishlist %s created!", wishlist.wishlist_name)
-    res=wishlist.serialize()
-    location_url = url_for("get_wishlists", wishlist_id = wishlist.id, _external=True)
-    return jsonify(res), status.HTTP_201_CREATED,{"Location": location_url}
+    res = wishlist.serialize()
+    location_url = url_for("get_wishlists", wishlist_id=wishlist.id, _external=True)
+    return jsonify(res), status.HTTP_201_CREATED, {"Location": location_url}
 
 
 @app.route("/wishlists/<int:wishlist_id>", methods=["DELETE"])
@@ -106,28 +108,30 @@ def delete_wishlists(wishlist_id):
 ######################################################################
 # RENAME A WISHLIST
 ######################################################################
+
+
 @app.route("/wishlists/<int:wishlist_id>", methods=["PUT"])
 def update_wishlist(wishlist_id):
     "update a wishlist"
     app.logger.info(f"Request to rename wishlist with id: {wishlist_id}")
     check_content_type("application/json")
     wishlist = Wishlist.find(wishlist_id)
-    
+
     if not wishlist:
         abort(
             status.HTTP_404_NOT_FOUND,
             f"Wishlist with id '{wishlist_id}' was not found.",
         )
-    
+
     body = request.get_json()
     app.logger.info("Get body=%s", body)
-    update_wl=Wishlist.find_by_name(body['wishlist_name'])
-    if update_wl.count()>0:
+    update_wl = Wishlist.find_by_name(body['wishlist_name'])
+    if update_wl.count() > 0:
         abort(
             status.HTTP_409_CONFLICT,
             f"name '{body['wishlist_name']}'exist, rename fail.",
         )
-    
+
     wishlist.deserialize(body)
     wishlist.update()
     app.logger.info(f"Wishlist with is: {wishlist_id} updated.")
@@ -173,6 +177,7 @@ def create_product(wishlist_id):
 # LIST ALL PRODUCTS
 ######################################################################
 
+
 @app.route("/wishlists/<int:wishlist_id>/products", methods=["GET"])
 def list_products(wishlist_id):
     app.logger.info("Request to list all Products for a wishlist with id: %s", wishlist_id)
@@ -188,17 +193,19 @@ def list_products(wishlist_id):
 ######################################################################
 # RETRIEVE A PRODUCT FROM WISHLIST
 ######################################################################
-@app.route("/wishlists/<int:wishlist_id>/products/<int:product_id>", methods = ["GET"])
+
+
+@app.route("/wishlists/<int:wishlist_id>/products/<int:product_id>", methods=["GET"])
 def get_products(wishlist_id, product_id):
     """
     this endpoint returns a product in the wishlist
     """
     app.logger.info("Request to retrieve a product with id %s for Wishlist %s", product_id, wishlist_id)
-    product = Product.find(product_id)
+    product = Product.find_product_wl(product_id, wishlist_id)
     if not product:
         abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
 
-    app.logger.info("Returning product: %s", product.id)
+    app.logger.info("Returning product: %s", product_id)
     return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
 
 
@@ -220,6 +227,48 @@ def remove_product(wishlist_id, product_id):
     app.logger.info("Product with ID [%s] is deleted from wishlist [%s]", product_id, wishlist_id)
     return make_response("", status.HTTP_204_NO_CONTENT)
 
+######################################################################
+# UPDATE A PRODUCT
+######################################################################
+
+
+@app.route('/wishlists/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    """Updates the product with a wishlist id."""
+
+    app.logger.info(
+        "Request to update product %d ", product_id
+    )
+    product_list = Product.find_all(product_id)
+
+    if len(product_list) == 0:
+        abort(
+            status.HTTP_404_NOT_FOUND, f"Product {product_id} not found"
+        )
+    body = request.get_json()
+    app.logger.info("Request body=%s", body)
+    new_name = body.get("product_name", None)
+    if not new_name:
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            f"parameter is invalid for update product '{product_id}', miss product name.",
+        )
+    new_price = body.get("product_price", None)
+    if not new_price:
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            f"parameter is invalid for update product '{product_id}', miss product price.",
+        )
+
+    for product in product_list:
+        product.product_name = new_name
+        product.product_price = new_price
+        product.update()
+
+    app.logger.info(f"Product with id: {product_id} is updated.")
+    return {}, status.HTTP_202_ACCEPTED
+
+
 def check_content_type(media_type):
     """Checks that the media type is correct"""
     content_type = request.headers.get("Content-Type")
@@ -230,5 +279,3 @@ def check_content_type(media_type):
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
         f"Content-Type must be {media_type}",
     )
-
-
