@@ -142,7 +142,7 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(len(new_wishlist.wishlist_products), 1)
         self.assertEqual(new_wishlist.wishlist_products[0].product_id, product.product_id)
         self.assertEqual(new_wishlist.wishlist_products[0].product_name, product.product_name)
-        self.assertEqual(new_wishlist.wishlist_products[0].product_price, product.product_price)
+        self.assertAlmostEqual(new_wishlist.wishlist_products[0].product_price, product.product_price)
         # Adding another product
         product2 = ProductFactory(wishlist=wishlist)
         wishlist.wishlist_products.append(product2)
@@ -150,9 +150,9 @@ class TestWishlist(unittest.TestCase):
         # Fetch it back
         new_wishlist = Wishlist.find(wishlist.id)
         self.assertEqual(len(new_wishlist.wishlist_products), 2)
-        self.assertEqual(new_wishlist.wishlist_products[1].product_id, product.product_id)
+        self.assertEqual(new_wishlist.wishlist_products[1].product_id, product2.product_id)
         self.assertEqual(new_wishlist.wishlist_products[1].product_name, product2.product_name)
-        self.assertEqual(new_wishlist.wishlist_products[1].product_price, product2.product_price)
+        self.assertAlmostEqual(new_wishlist.wishlist_products[1].product_price, product2.product_price)
 
     def test_list_all_wishlist_products(self):
         """It should List all Products in a Wishlist"""
@@ -172,7 +172,7 @@ class TestWishlist(unittest.TestCase):
         for i, product in enumerate(products):
             self.assertEqual(fetch_wishlist.wishlist_products[i].product_id, product.product_id)
             self.assertEqual(fetch_wishlist.wishlist_products[i].product_name, product.product_name)
-            self.assertEqual(fetch_wishlist.wishlist_products[i].product_price, product.product_price)
+            self.assertAlmostEqual(fetch_wishlist.wishlist_products[i].product_price, product.product_price)
 
     def test_remove_wishlist_product(self):
         """It should remove a Product from a Wishlist"""
