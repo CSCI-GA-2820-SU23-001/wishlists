@@ -131,23 +131,31 @@ class TestWishlist(unittest.TestCase):
     
     def test_list_all_wishlist_products(self):
 
-                   
     # Create a wishlist and add products to it
         wishlist = WishlistFactory()
+        wishlist.create()
+        self.assertEqual(wishlist.wishlist_products, [])
+
         products = ProductFactory.create_batch(5)
         for product in products:
             wishlist.wishlist_products.append(product)
+        
+        wishlist.update()
 
         # Get the list of products in the wishlist
         wishlist_products = wishlist.wishlist_products
-
+        
         # Assert that the number of products in the wishlist is correct
         self.assertEqual(len(wishlist_products), 5)
 
+        #Fetch it back 
+        fetch_wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(fetch_wishlist.wishlist_products),5)
+
         # Assert that the products in the wishlist match the original products
         for i, product in enumerate(products):
-            self.assertEqual(wishlist_products[i].product_name, product.product_name)
-            self.assertEqual(wishlist_products[i].product_price, product.product_price)
+            self.assertEqual(fetch_wishlist.wishlist_products[i].product_name, product.product_name)
+            self.assertEqual(fetch_wishlist.wishlist_products[i].product_price, product.product_price)
            
 
     def test_remove_wishlist_product(self):
