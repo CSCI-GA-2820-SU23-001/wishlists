@@ -22,15 +22,12 @@ class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
 
 
-
-
-
-
-
-
+######################################################################
+#  P R O D U C T   M O D E L
+######################################################################
 class Product(db.Model):
     """
-    Class that represents an Product
+    Class that represents a Product
 
     Schema Description:
     id = primary key for product-wishlist table
@@ -39,8 +36,6 @@ class Product(db.Model):
     product_name = name of the product
     product_price = current price of the product
     """
-
-    app = None
 
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
@@ -54,7 +49,7 @@ class Product(db.Model):
 
     def create(self):
         """
-        Creates an Product-Wishlist mapping to the database
+        Creates a Product-Wishlist mapping in the database
         """
         logger.info("Adding product %s to wishlist %d", self.product_name, self.wishlist_id)
         self.id = None  # pylint: disable=invalid-name
@@ -63,19 +58,19 @@ class Product(db.Model):
 
     def update(self):
         """
-        Updates an Product-Wishlist mapping to the database
+        Updates a Product-Wishlist mapping in the database
         """
         logger.info("Saving product %s in wishlist %d", self.product_name, self.wishlist_id)
         db.session.commit()
 
     def delete(self):
-        """ Removes an Product-Wishlist mapping from the data store """
+        """ Removes a Product-Wishlist mapping from the database """
         logger.info("Deleting product %s from wishlist %d", self.product_name, self.wishlist_id)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a Wishlist into a dictionary """
+        """ Converts a Product into a dictionary """
         product = {
             "id": self.id,
             "wishlist_id": self.wishlist_id,
@@ -85,12 +80,12 @@ class Product(db.Model):
         }
         return product
 
-    def deserialize(self, data:dict) -> None:
+    def deserialize(self, data: dict) -> None:
         """
-        Deserializes a Wishlist from a dictionary
+        Populates a Product from a dictionary
 
         Args:
-            data (dict): A dictionary containing the resource data
+            data (dict): A dictionary containing the product data
         """
         try:
             self.wishlist_id = data["wishlist_id"]
@@ -111,7 +106,7 @@ class Product(db.Model):
     @classmethod
     def init_db(cls, app):
         """ Initializes the database session """
-        logger.info("Initializing products database")
+        logger.info("Initializing Products database")
         cls.app = app
         # This is where we initialize SQLAlchemy from the Flask app
         db.init_app(app)
@@ -120,14 +115,14 @@ class Product(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the Wishlists in the database """
+        """ Returns all Products in the database """
         logger.info("Processing all Products")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a Wishlist by it's ID """
-        logger.info("Processing lookup for id %s ...", by_id)
+        """ Finds a Product by its id """
+        logger.info("Processing lookup for Product with id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
@@ -137,10 +132,13 @@ class Product(db.Model):
         Args:
             name (string): the name of the Product you want to match
         """
-        logger.info("Processing name query for %s ...", by_name)
+        logger.info("Processing name query for Product with name %s ...", by_name)
         return cls.query.filter(cls.product_name == by_name)
 
 
+######################################################################
+#  W I S H L I S T   M O D E L
+######################################################################
 class Wishlist(db.Model):
     """
     Class that represents a Wishlist
@@ -149,6 +147,7 @@ class Wishlist(db.Model):
     id = primary key for user-wishlist table
     user_id = id of the user who owns the wishlist
     wishlist_name = user-assigned name of the wishlist
+    wishlist_product = collection of products in the wishlist
     """
 
     app = None
@@ -156,7 +155,7 @@ class Wishlist(db.Model):
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    wishlist_name = db.Column(db.String(63), nullable=False,unique=True)
+    wishlist_name = db.Column(db.String(63), nullable=False, unique=True)
     wishlist_products = db.relationship("Product", backref="wishlist", passive_deletes=True)
 
     def __repr__(self):
@@ -164,28 +163,28 @@ class Wishlist(db.Model):
 
     def create(self):
         """
-        Creates a Wishlist to the database
+        Creates a Wishlist in the database
         """
-        logger.info("Creating %s", self.wishlist_name)
+        logger.info("Creating wishlist %s", self.wishlist_name)
         self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
         db.session.commit()
 
     def update(self):
         """
-        Updates a Wishlist to the database
+        Updates a Wishlist in the database
         """
-        logger.info("Saving %s", self.wishlist_name)
+        logger.info("Saving wishlist %s", self.wishlist_name)
         db.session.commit()
 
     def delete(self):
         """ Removes a Wishlist from the data store """
-        logger.info("Deleting %s", self.wishlist_name)
+        logger.info("Deleting wishlist %s", self.wishlist_name)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a Wishlist into a dictionary """
+        """ Converts a Wishlist into a dictionary """
         wishlist = {
             "id": self.id,
             "user_id": self.user_id,
@@ -196,23 +195,21 @@ class Wishlist(db.Model):
             wishlist["wishlist_products"].append(product.serialize())
         return wishlist
 
-    def deserialize(self, data:dict) -> None:
+    def deserialize(self, data):
         """
-        Deserializes a Wishlist from a dictionary
+        Populates a Wishlist from a dictionary
 
         Args:
-            data (dict): A dictionary containing the resource data
+            data (dict): A dictionary containing the wishlist data
         """
         try:
             self.user_id = data["user_id"]
             self.wishlist_name = data.get("wishlist_name")
-
             product_list = data["wishlist_products"]
             for json_product in product_list:
                 product = Product()
                 product.deserialize(json_product)
                 self.wishlist_products.append(product)
-
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Wishlist: missing " + error.args[0]
@@ -227,7 +224,7 @@ class Wishlist(db.Model):
     @classmethod
     def init_db(cls, app):
         """ Initializes the database session """
-        logger.info("Initializing wishlists database")
+        logger.info("Initializing Wishlists database")
         cls.app = app
         # This is where we initialize SQLAlchemy from the Flask app
         db.init_app(app)
@@ -236,14 +233,14 @@ class Wishlist(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the Wishlists in the database """
+        """ Returns all Wishlists in the database """
         logger.info("Processing all Wishlists")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a Wishlist by it's ID """
-        logger.info("Processing lookup for id %s ...", by_id)
+        """ Finds a Wishlist by its id """
+        logger.info("Processing lookup for Wishlist with id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
@@ -253,6 +250,5 @@ class Wishlist(db.Model):
         Args:
             name (string): the name of the Wishlists you want to match
         """
-        logger.info("Processing name query for %s ...", by_name)
+        logger.info("Processing name query for Wishlist with name %s ...", by_name)
         return cls.query.filter(cls.wishlist_name == by_name)
-
