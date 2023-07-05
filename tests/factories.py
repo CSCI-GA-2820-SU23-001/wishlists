@@ -15,9 +15,7 @@
 """
 Test Factory to make fake objects for testing
 """
-from datetime import date
 import factory
-from factory.fuzzy import FuzzyChoice, FuzzyDate
 from service.models import Wishlist, Product
 
 
