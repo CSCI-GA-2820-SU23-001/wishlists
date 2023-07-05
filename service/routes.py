@@ -255,6 +255,30 @@ def get_products(wishlist_id, product_id):
 
 
 ######################################################################
+# UPDATE A PRODUCT
+######################################################################
+@app.route('/wishlists/<int:wishlist_id>/products/<int:product_id>', methods=['PUT'])
+def update_product(wishlist_id, product_id):
+    """
+    Update a product
+
+    This endpoint updates the specified product from the given wishlist
+    """
+    app.logger.info("Request to update product %s in Wishlist %s", product_id, wishlist_id)
+
+    # See if the product exists, and abort if it does not
+    product = Product.find(product_id)
+    if not product:
+        abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found")
+
+    product.deserialize(request.get_json())
+    product.id = product_id
+    product.update()
+
+    return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
 # DELETE A PRODUCT
 ######################################################################
 @app.route('/wishlists/<int:wishlist_id>/products/<int:product_id>', methods=['DELETE'])

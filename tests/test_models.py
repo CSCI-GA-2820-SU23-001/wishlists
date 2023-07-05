@@ -237,6 +237,33 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(product.product_name, new_product.product_name)
         self.assertAlmostEqual(product.product_price, new_product.product_price)
 
+    def test_update_a_wishlist_product(self):
+        """It should update a Product in a Wishlist"""
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+        wishlist = WishlistFactory()
+        product = ProductFactory(wishlist=wishlist)
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertIsNotNone(wishlist.id)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+        # Fetch it back, and ensure that the product details are correct
+        wishlist = Wishlist.find(wishlist.id)
+        old_product = wishlist.wishlist_products[0]
+        self.assertEqual(old_product.product_id, product.product_id)
+        self.assertEqual(old_product.product_name, product.product_name)
+        self.assertEqual(old_product.product_price, product.product_price)
+        # Update the product details
+        old_product.product_name = "newName"
+        old_product.product_price = 3.3
+        wishlist.update()
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        product = wishlist.wishlist_products[0]
+        self.assertEqual(product.product_name, "newName")
+        self.assertAlmostEqual(product.product_price, 3.3)
+
     def test_remove_wishlist_product(self):
         """It should remove a Product from a Wishlist"""
         wishlists = Wishlist.all()
