@@ -198,3 +198,15 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(len(wishlists), 1)
         self.assertEqual(wishlists[0].id, original_id)
         self.assertEqual(wishlists[0].wishlist_name, "Test")
+
+
+    def test_update_an_item(self):
+        """It should Update an item"""
+        product=ProductFactory()
+        product.create()
+        product.product_name="newName"
+        product.product_price=3.3
+        product.update()
+       
+        self.assertEqual(product.product_name, "newName")
+        self.assertEqual(product.product_price, 3.3)
