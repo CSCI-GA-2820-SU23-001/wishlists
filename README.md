@@ -36,6 +36,16 @@ These should be copied using a bash shell as follows:
 | get_wishlists   | GET | ```/wishlists/<int:wishlist_id>``` |
 | delete_wishlist   | DELETE  | ```/wishlists/<int:wishlist_id>```  |
 
+## Product APIs 
+
+| Operation | Method | Endpoints |
+| -------- | -------- | -------- |
+|  create_a_product  |  POST  | ```/wishlists/<int:wishlist_id>/products`` |
+| update_product   | PUT   | ```/wishlists/<int:wishlist_id> ```  |
+| list_products | GET | /wishlists/<int:wishlist_id>/products|
+| get_products  | GET | ```/wishlists/<int:wishlist_id>/products/<int:product_id>``` |
+| remove_product  | DELETE  | ```/wishlists/<int:wishlist_id>/products/<int:product_id>```  |
+
 
 ## API usage documentation 
 
@@ -171,6 +181,145 @@ Response : ``` HTTP_200_OK ```
 This API deletes a wishlist whose wishlist id is passed
 
 Example: http://127.0.0.1:8000/wishlists/1
+
+Response : ``` 204 NO_CONTENT ```
+
+
+### Create a Product  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}/products`
+
+**Method:** `POST`
+
+This API creates a product when a JSON body comprising of an id, product_id, wishlist_id, product_name and product_price associated with that wishlist is passed. 
+
+Example:
+
+API :   ``` http://127.0.0.1:8000/wishlists/51/products ```
+
+Request Body (JSON)
+
+```
+{
+"id" : 1,
+"wishlist_id" : 51,
+"product_id" : "1",
+"product_name" : "Product 1",
+"product_price" : 250
+
+}
+```
+Response : ``` HTTP_201_CREATED ```
+
+```
+{
+  "id": 17,
+  "product_id": 1,
+  "product_name": "Product 1",
+  "product_price": 250.0,
+  "wishlist_id": 51
+}
+
+```
+
+### Update a product  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}/products/{int:product_id}`
+
+**Method:** `PUT`
+
+This API updates a product in the wishlist of wishlist_id passed with the passed data accordingly.
+
+Example:
+
+``` http://127.0.0.1:8000/wishlists/51/products/17 ```
+
+Request Body (JSON)
+
+```
+{
+  "id": 17,
+  "wishlist_id" : 51,
+  "product_id" : 1,
+  "product_name": "New Product name",
+  "product_price": 300
+}
+```
+Response : ``` HTTP_200_OK```
+
+```
+{
+  "id": 17,
+  "product_id": 1,
+  "product_name": "New Product name",
+  "product_price": 300.0,
+  "wishlist_id": 51
+}
+```
+### List all products  
+
+**URL:** `http://127.0.0.1:8000/wishlists/51/products`
+
+**Method:** `GET`
+
+This API lists all the products present in the wishlist of id wishlist_id that is passed.
+
+Example:
+
+Response : ``` HTTP_200_OK ```
+
+```
+[
+  {
+    "id": 16,
+    "product_id": 719,
+    "product_name": "newProduct",
+    "product_price": 2.2,
+    "wishlist_id": 51
+  },
+  {
+    "id": 17,
+    "product_id": 1,
+    "product_name": "New Product name",
+    "product_price": 300.0,
+    "wishlist_id": 51
+  }
+]
+```
+
+### Get a product  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}/products/{int:product_id}`
+
+**Method:** `GET`
+
+This API retrieves a product whose id is passed from the wishlist of id wishlist_id that is passed.
+
+Example:
+
+API :   ``` http://127.0.0.1:8000/wishlists/51/products/17```
+
+Response : ``` HTTP_200_OK ```
+
+```
+{
+  "id": 17,
+  "product_id": 1,
+  "product_name": "New Product name",
+  "product_price": 300.0,
+  "wishlist_id": 51
+}
+```
+
+### Delete a product  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}/products/{int:product_id}`
+
+**Method:** `DELETE`
+
+This API deletes a product from a wishlist whose wishlist id and product id are passed
+
+Example: http://127.0.0.1:8000/wishlists/1/products/1
 
 Response : ``` 204 NO_CONTENT ```
 
