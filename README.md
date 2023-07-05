@@ -39,12 +39,11 @@ These should be copied using a bash shell as follows:
 
 ## API usage documentation 
 
-# Create a Wishlist  
+### Create a Wishlist  
 
 **URL:** `http://127.0.0.1:8000/wishlists`
+
 **Method:** `POST`
-**Auth required:** No
-**Permissions required:** No
 
 This API creates a wishlist when a JSON body comprising of an id, user id, name for the wishlist and the products associated with that wishlist is passed. 
 
@@ -62,9 +61,7 @@ Request Body (JSON)
 }
 
 ```
-
 Response : ``` HTTP_201_CREATED ```
-
 
 ```
 {
@@ -76,6 +73,106 @@ Response : ``` HTTP_201_CREATED ```
 }
 
 ```
+
+### Update a wishlist  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}`
+
+**Method:** `PUT`
+
+This API updates a wishlist whose wishlist_list id is passed to the fields passed as a JSON body accordingly
+
+Example:
+
+``` http://127.0.0.1:8000/wishlists/1 ```
+
+Request Body (JSON)
+
+```
+{
+  "user_id" : 1,
+"wishlist_name" : "wishlist-id1",
+"wishlist_products" : []
+}
+
+
+```
+Response : ``` HTTP_200_OK```
+
+```
+{
+  "id": 1,
+  "user_id": 1,
+  "wishlist_name": "wishlist-id1",
+  "wishlist_products": []
+}
+
+```
+
+### List all wishlists  
+
+**URL:** `http://127.0.0.1:8000/wishlists`
+
+**Method:** `GET`
+
+This API lists all the wishlists present in the database.
+
+Example:
+
+Response : ``` HTTP_200_OK ```
+
+```
+[
+  {
+    "id": 2,
+    "user_id": 3,
+    "wishlist_name": "wishlist",
+    "wishlist_products": []
+  },
+  {
+    "id": 1,
+    "user_id": 1,
+    "wishlist_name": "wishlist-id1",
+    "wishlist_products": []
+  }
+]
+```
+
+### Get a wishlist  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}`
+
+**Method:** `GET`
+
+
+This API retrieves a wishlist whose id is passed 
+
+Example:
+
+API :   ``` http://127.0.0.1:8000/wishlists/1 ```
+
+Response : ``` HTTP_200_OK ```
+
+```
+{
+  "id": 1,
+  "user_id": 1,
+  "wishlist_name": "wishlist-id1",
+  "wishlist_products": []
+}
+```
+
+### Delete a wishlist  
+
+**URL:** `http://127.0.0.1:8000/wishlists/{int:wishlist_id}`
+
+**Method:** `DELETE`
+
+This API deletes a wishlist whose wishlist id is passed
+
+Example: http://127.0.0.1:8000/wishlists/1
+
+Response : ``` 204 NO_CONTENT ```
 
 
 ## Contents
