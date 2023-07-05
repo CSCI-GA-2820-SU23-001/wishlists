@@ -5,6 +5,7 @@ Test cases for Wishlist Model and Product Model
 import os
 import logging
 import unittest
+from decimal import Decimal
 from service import app
 from service.models import Wishlist, Product, db, DataValidationError
 from tests.factories import WishlistFactory, ProductFactory
@@ -256,13 +257,13 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(old_product.product_price, product.product_price)
         # Update the product details
         old_product.product_name = "newName"
-        old_product.product_price = 3.3
+        old_product.product_price = Decimal(3.3)
         wishlist.update()
         # Fetch it back again
         wishlist = Wishlist.find(wishlist.id)
         product = wishlist.wishlist_products[0]
         self.assertEqual(product.product_name, "newName")
-        self.assertAlmostEqual(product.product_price, 3.3)
+        self.assertAlmostEqual(product.product_price, Decimal(3.3))
 
     def test_remove_wishlist_product(self):
         """It should remove a Product from a Wishlist"""

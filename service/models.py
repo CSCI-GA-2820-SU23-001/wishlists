@@ -42,7 +42,7 @@ class Product(db.Model):
     wishlist_id = db.Column(db.Integer, db.ForeignKey("wishlist.id", ondelete="CASCADE"), nullable=False)
     product_id = db.Column(db.Integer, nullable=False)
     product_name = db.Column(db.String(63), nullable=False)
-    product_price = db.Column(db.Float, nullable=False)
+    product_price = db.Column(db.Numeric(), nullable=False)
 
     def __repr__(self):
         return f"<Product {self.product_name} id=[{self.id}] in Wishlist {self.wishlist_id}>"

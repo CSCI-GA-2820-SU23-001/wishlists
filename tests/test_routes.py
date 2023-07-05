@@ -7,6 +7,7 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
+from decimal import Decimal
 from service import app
 from service.models import Wishlist, db, init_db
 from tests.factories import WishlistFactory, ProductFactory
@@ -243,7 +244,7 @@ class TestWishlistServer(TestCase):
         for i, product in enumerate(products):
             self.assertEqual(data[i]['product_id'], product.product_id)
             self.assertEqual(data[i]['product_name'], product.product_name)
-            self.assertEqual(data[i]['product_price'], product.product_price)
+            self.assertEqual(Decimal(data[i]['product_price']), product.product_price)
 
     def test_cannot_list_products(self):
         """ It should fail to list the products in a non-existent wishlist """
@@ -279,7 +280,7 @@ class TestWishlistServer(TestCase):
         logging.debug(data)
         self.assertEqual(data['product_id'], product.product_id)
         self.assertEqual(data['product_name'], product.product_name)
-        self.assertEqual(data['product_price'], product.product_price)
+        self.assertAlmostEqual(Decimal(data['product_price']), product.product_price)
 
     def test_cannot_add_product(self):
         """ It should fail to add a product to a non-existent Wishlist """
@@ -318,7 +319,7 @@ class TestWishlistServer(TestCase):
         self.assertEqual(data["wishlist_id"], wishlist.id)
         self.assertEqual(data["product_id"], product.product_id)
         self.assertEqual(data["product_name"], product.product_name)
-        self.assertEqual(data["product_price"], product.product_price)
+        self.assertEqual(Decimal(data["product_price"]), product.product_price)
 
     def test_cannot_read_a_product(self):
         """ It should fail to read a non-existent Product """
@@ -350,7 +351,7 @@ class TestWishlistServer(TestCase):
         logging.debug(data)
         product_id = data["id"]
         data["product_name"] = "newProduct"
-        data["product_price"] = 2.2
+        data["product_price"] = Decimal(2.2)
         # Send the update back
         res = self.client.put(
             f"{BASE_URL}/{wishlist.id}/products/{product_id}",
@@ -369,7 +370,7 @@ class TestWishlistServer(TestCase):
         self.assertEqual(data["wishlist_id"], wishlist.id)
         self.assertEqual(data["product_id"], product.product_id)
         self.assertEqual(data["product_name"], "newProduct")
-        self.assertAlmostEqual(data["product_price"], 2.2)
+        self.assertAlmostEqual(Decimal(data["product_price"]), Decimal(2.2))
 
     def test_cannot_update_a_product(self):
         """ It should fail to update a non-existent Product """
@@ -386,7 +387,7 @@ class TestWishlistServer(TestCase):
         logging.debug(data)
         non_existent_product_id = data["id"] + 1
         data["product_name"] = "newProduct"
-        data["product_price"] = 2.2
+        data["product_price"] = Decimal(2.2)
         # Send the update back
         res = self.client.put(
             f"{BASE_URL}/{wishlist.id}/products/{non_existent_product_id}",
