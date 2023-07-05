@@ -272,8 +272,10 @@ def update_product(wishlist_id, product_id):
     if not product:
         abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found")
 
+    original_wishlist_id = product.wishlist_id
     product.deserialize(request.get_json())
     product.id = product_id
+    product.wishlist_id = original_wishlist_id
     product.update()
 
     return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
