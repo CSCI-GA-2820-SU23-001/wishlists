@@ -372,7 +372,7 @@ class TestWishlistServer(TestCase):
         self.assertAlmostEqual(data["product_price"], 2.2)
 
     def test_cannot_update_a_product(self):
-        """ It should fail to update non-existent Product """
+        """ It should fail to update q non-existent Product """
         # Create a known product
         wishlist = self._create_wishlists(1)[0]
         product = ProductFactory()
