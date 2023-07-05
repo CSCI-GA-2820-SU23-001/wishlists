@@ -201,11 +201,11 @@ def get_products(wishlist_id, product_id):
     this endpoint returns a product in the wishlist
     """
     app.logger.info("Request to retrieve a product with id %s for Wishlist %s", product_id, wishlist_id)
-    product = Product.find_product_wl(product_id, wishlist_id)
+    product = Product.find(product_id)
     if not product:
         abort(status.HTTP_404_NOT_FOUND, f"Product with id '{product_id}' was not found.")
 
-    app.logger.info("Returning product: %s", product_id)
+    app.logger.info("Returning product: %s", product.id)
     return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
 
 
@@ -239,7 +239,7 @@ def update_product(product_id):
     app.logger.info(
         "Request to update product %d ", product_id
     )
-    product_list = Product.find_all(product_id)
+    product_list = Produƒct.find_all_pid(product_id)
 
     if len(product_list) == 0:
         abort(

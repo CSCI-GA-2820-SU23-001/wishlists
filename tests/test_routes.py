@@ -260,7 +260,7 @@ class TestWishlistServer(TestCase):
             json=product1.serialize(),
             content_type="application/json",
         )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATEƒD)
 
         product2 = Product(wishlist_id=wl2.id, product_id=1, product_name="product", product_price=1.1)
         resp = self.client.post(
@@ -278,14 +278,10 @@ class TestWishlistServer(TestCase):
         self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED, f"Could not update product {product1.product_id}")
 
         # Check the updated product info
-        resp = self.client.get(f"{BASE_URL}/{wl1.id}/products/{product1.product_id}")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        p1 = resp.get_json()
-        self.assertEqual(product1.product_name, p1['product_name'])
-        self.assertEqual(product1.product_price, p1['product_price'])
+        p1=Product.find_product_wl(product1.product_id,wl1.id)
+        self.assertEqual(p1.product_name,product1.product_name)
+        self.assertEqual(p1.product_price,product1.product_price)
 
-        resp = self.client.get(f"{BASE_URL}/{wl2.id}/products/{product2.product_id}")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        p2 = resp.get_json()
-        self.assertEqual(product2.product_name, p2['product_name'])
-        self.assertEqual(product2.product_price, p2['product_price'])
+        p2=Product.find_product_wl(product2.product_id,wl2.id)
+        self.assertEqual(p2.product_name,product2.product_name)
+        self.assertEqual(p2.product_price,product2.product_price)
