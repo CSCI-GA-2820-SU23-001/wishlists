@@ -196,6 +196,32 @@ class TestWishlistServer(TestCase):
         self.assertEqual(data['product_name'], product.product_name)
         self.assertEqual(data['product_price'], product.product_price)
 
+    def test_read_product(self):
+        """It should read a Product from a Wishlist"""
+        # Create a known product
+        wishlist = self._create_wishlists(1)[0]
+        product = ProductFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlist.id}/products",
+            json=product.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        data = resp.get_json()
+        logging.debug(data)
+        product_id = data["id"]
+        # Retrieve it back
+        resp = self.client.get(
+            f"{BASE_URL}/{wishlist.id}/products/{product_id}",
+            content_type="application/json"
+        )
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["wishlist_id"], wishlist.id)
+        self.assertEqual(data["product_id"], product.product_id)
+        self.assertEqual(data["product_name"], product.product_name)
+        self.assertEqual(data["product_price"], product.product_price)
+
     def test_remove_product(self):
         """It should remove a Product from a Wishlist"""
         wishlist = self._create_wishlists(1)[0]     # create a single wishlist

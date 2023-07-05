@@ -174,6 +174,22 @@ class TestWishlist(unittest.TestCase):
             self.assertEqual(fetch_wishlist.wishlist_products[i].product_name, product.product_name)
             self.assertAlmostEqual(fetch_wishlist.wishlist_products[i].product_price, product.product_price)
 
+    def test_read_a_product_from_wishlist(self):
+        """It should return a Product from a Wishlist"""
+        wishlist = WishlistFactory()
+        product = ProductFactory(wishlist=wishlist)
+        wishlist.create()
+        # Obtain the id of the newly created product
+        new_product_id = Wishlist.find(wishlist.id).wishlist_products[0].id
+        self.assertIsNotNone(new_product_id)
+        # Fetch the product from the database
+        new_product = Product.find(new_product_id)
+        # Ensuring that the data of the fetched product matches with that inserted
+        self.assertEqual(product.wishlist_id, wishlist.id)
+        self.assertEqual(product.product_id, new_product.product_id)
+        self.assertEqual(product.product_name, new_product.product_name)
+        self.assertAlmostEqual(product.product_price, new_product.product_price)
+
     def test_remove_wishlist_product(self):
         """It should remove a Product from a Wishlist"""
         wishlists = Wishlist.all()
