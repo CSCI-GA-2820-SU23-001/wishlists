@@ -232,25 +232,25 @@ def remove_product(wishlist_id, product_id):
 ######################################################################
 
 
-@app.route('/wishlists/products/<int:wishlist_id>/<int:item_id>', methods=['PUT'])
-def update_product(wishlist_id, item_id):
+@app.route('/wishlists/products/<int:wishlist_id>/<int:product_id>', methods=['PUT'])
+def update_product(wishlist_id, product_id):
     """Updates the product with a wishlist id."""
 
     app.logger.info(
-        "Request to update product %d ", item_id
+        "Request to update product %d ", product_id
     )
-    product = Product.find(item_id)
+    product = Product.find(product_id)
 
     if not product:
         abort(
-            status.HTTP_404_NOT_FOUND, f"Product {item_id} not found"
+            status.HTTP_404_NOT_FOUND, f"Product {product_id} not found"
         )
 
     body = request.get_json()
     product.deserialize(body)
     product.update()
 
-    app.logger.info(f"Product with id: {item_id} is updated.")
+    app.logger.info(f"Product with id: {product_id} is updated.")
     return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
 
 
