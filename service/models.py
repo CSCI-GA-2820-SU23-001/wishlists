@@ -124,18 +124,6 @@ class Product(db.Model):
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 
-    @classmethod
-    def find_all_pid(cls, product_id):
-        """ Finds all products by the ID """
-        logger.info("Processing lookup for product id %s ...", product_id)
-        return cls.query.filter_by(product_id=product_id).all()
-
-    @classmethod
-    def find_all_id(cls, id):
-        """ Finds all products by the ID """
-        logger.info("Processing lookup for product id %s ...", id)
-        return cls.query.filter_by(id=id).all()
-
 
     @classmethod
     def find_product_wl(cls, product_id, wishlist_id):

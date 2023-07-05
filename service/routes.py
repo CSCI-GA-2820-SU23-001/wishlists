@@ -228,45 +228,30 @@ def remove_product(wishlist_id, product_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
-# UPDATE A PRODUCT
+# UPDATE AN ITEM
 ######################################################################
 
 
-@app.route('/wishlists/products/<int:product_id>', methods=['PUT'])
-def update_product(product_id):
+@app.route('/wishlists/products/<int:wishlist_id>/<int:item_id>', methods=['PUT'])
+def update_product(wishlist_id, item_id):
     """Updates the product with a wishlist id."""
 
     app.logger.info(
-        "Request to update product %d ", product_id
+        "Request to update product %d ", item_id
     )
-    product_list = Product.find_all_pid(product_id)
+    product = Product.find(item_id)
 
-    if len(product_list) == 0:
+    if not product:
         abort(
-            status.HTTP_404_NOT_FOUND, f"Product {product_id} not found"
+            status.HTTP_404_NOT_FOUND, f"Product {item_id} not found"
         )
+
     body = request.get_json()
-    app.logger.info("Request body=%s", body)
-    new_name = body.get("product_name", None)
-    if not new_name:
-        abort(
-            status.HTTP_400_BAD_REQUEST,
-            f"parameter is invalid for update product '{product_id}', miss product name.",
-        )
-    new_price = body.get("product_price", None)
-    if not new_price:
-        abort(
-            status.HTTP_400_BAD_REQUEST,
-            f"parameter is invalid for update product '{product_id}', miss product price.",
-        )
+    product.deserialize(body)
+    product.update()
 
-    for product in product_list:
-        product.product_name = new_name
-        product.product_price = new_price
-        product.update()
-
-    app.logger.info(f"Product with id: {product_id} is updated.")
-    return {}, status.HTTP_202_ACCEPTED
+    app.logger.info(f"Product with id: {item_id} is updated.")
+    return make_response(jsonify(product.serialize()), status.HTTP_200_OK)
 
 
 def check_content_type(media_type):

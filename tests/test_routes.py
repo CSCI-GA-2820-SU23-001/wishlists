@@ -251,37 +251,28 @@ class TestWishlistServer(TestCase):
 
     def test_update_product(self):
         """ It should update the Product in every wish list"""
-        # Generate 2 wishlists
-        wl1, wl2 = self._create_wishlists(2)
-        # Generate products and insert into db
-        product1 = Product(wishlist_id=wl1.id, product_id=1, product_name="product", product_price=1.1)
+        # Generate a wishlist
+        wl = WishlistFactory()
+
+        # Generate a product and insert into db
+        product = ProductFactory()
+        wl.wishlist_products.append(product)
         resp = self.client.post(
-            f"{BASE_URL}/{wl1.id}/products",
-            json=product1.serialize(),
-            content_type="application/json",
+            BASE_URL, json=wl.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-        product2 = Product(wishlist_id=wl2.id, product_id=1, product_name="product", product_price=1.1)
-        resp = self.client.post(
-            f"{BASE_URL}/{wl2.id}/products",
-            json=product2.serialize(),
-            content_type="application/json",
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        product.wishlist_id = resp.get_json()['id']
+        product.id = resp.get_json()['wishlist_products'][0]['id']
 
         # Change the info of the product and put it
-        product1.product_name = product2.product_name = "newProduct"
-        product1.product_price = product2.product_price = 2.2
-        res = self.client.put(f"{BASE_URL}/products/{product1.product_id}",
-                              json=product1.serialize(), content_type="application/json")
-        self.assertEqual(res.status_code, status.HTTP_202_ACCEPTED, f"Could not update product {product1.product_id}")
+        product.product_name = "newProduct"
+        product.product_price = 2.2
+        res = self.client.put(f"/wishlists/products/{product.wishlist_id}/{product.id}",
+                              json=product.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_200_OK, f"Could not update product {product.id}")
 
         # Check the updated product info
-        p1=Product.find_product_wl(product1.product_id,wl1.id)
-        self.assertEqual(p1.product_name,product1.product_name)
-        self.assertEqual(p1.product_price,product1.product_price)
-
-        p2=Product.find_product_wl(product2.product_id,wl2.id)
-        self.assertEqual(p2.product_name,product2.product_name)
-        self.assertEqual(p2.product_price,product2.product_price)
+        p = Product.find(product.id)
+        self.assertEqual(p.product_name, product.product_name)
+        self.assertEqual(p.product_price, product.product_price)
