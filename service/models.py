@@ -179,11 +179,12 @@ class Wishlist(db.Model):
         try:
             self.user_id = data["user_id"]
             self.wishlist_name = data.get("wishlist_name")
-            product_list = data["wishlist_products"]
-            for json_product in product_list:
-                product = Product()
-                product.deserialize(json_product)
-                self.wishlist_products.append(product)
+            product_list = data.get("wishlist_products")
+            if product_list is not None:
+                for json_product in product_list:
+                    product = Product()
+                    product.deserialize(json_product)
+                    self.wishlist_products.append(product)
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Wishlist: missing " + error.args[0]
