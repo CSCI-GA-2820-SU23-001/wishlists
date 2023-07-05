@@ -26,6 +26,15 @@ These should be copied using a bash shell as follows:
     cp .flaskenv ../<your_repo_folder>/
     cp .gitattributes ../<your_repo_folder>/
 ```
+## Wishlist APIs 
+
+| Operation | Method | Endpoints |
+| -------- | -------- | -------- |
+|  create_a_wishlist  |  POST  |  /wishlists |
+| Row 2    | Cell 3   | Cell 4   |
+| Row 3    | Cell 5   | Cell 6   |
+| Row 4    | Cell 7   | Cell 8   |
+| Row 5    | Cell 9   | Cell 10  |
 
 ## Contents
 
