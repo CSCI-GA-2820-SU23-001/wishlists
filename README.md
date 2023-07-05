@@ -40,9 +40,9 @@ These should be copied using a bash shell as follows:
 
 | Operation | Method | Endpoints |
 | -------- | -------- | -------- |
-|  create_a_product  |  POST  | ```/wishlists/<int:wishlist_id>/products`` |
+|  create_a_product  |  POST  | ```/wishlists/<int:wishlist_id>/products``` |
 | update_product   | PUT   | ```/wishlists/<int:wishlist_id> ```  |
-| list_products | GET | /wishlists/<int:wishlist_id>/products|
+| list_products | GET | ```/wishlists/<int:wishlist_id>/products```|
 | get_products  | GET | ```/wishlists/<int:wishlist_id>/products/<int:product_id>``` |
 | remove_product  | DELETE  | ```/wishlists/<int:wishlist_id>/products/<int:product_id>```  |
 
