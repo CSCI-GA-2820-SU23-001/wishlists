@@ -230,8 +230,9 @@ def create_product(wishlist_id):
     wishlist.update()
 
     message = product.serialize()
-
-    return make_response(jsonify(message), status.HTTP_201_CREATED)
+    location_url = url_for("get_products", wishlist_id=wishlist.id, product_id=product.id, _external=True)
+    
+    return make_response(jsonify(message), status.HTTP_201_CREATED, {"Location": location_url})
 
 
 ######################################################################
