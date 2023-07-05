@@ -30,11 +30,53 @@ These should be copied using a bash shell as follows:
 
 | Operation | Method | Endpoints |
 | -------- | -------- | -------- |
-|  create_a_wishlist  |  POST  |  /wishlists |
-| Row 2    | Cell 3   | Cell 4   |
-| Row 3    | Cell 5   | Cell 6   |
-| Row 4    | Cell 7   | Cell 8   |
-| Row 5    | Cell 9   | Cell 10  |
+|  create_a_wishlist  |  POST  | ```/wishlists``` |
+| update_a_wishlist    | PUT   | ```/wishlists/<int:wishlist_id> ```  |
+| list_all_wishlists    | GET   |  ```/wishlists```     |
+| get_wishlists   | GET | ```/wishlists/<int:wishlist_id>``` |
+| delete_wishlist   | DELETE  | ```/wishlists/<int:wishlist_id>```  |
+
+
+## API usage documentation 
+
+# Create a Wishlist  
+
+**URL:** `http://127.0.0.1:8000/wishlists`
+**Method:** `POST`
+**Auth required:** No
+**Permissions required:** No
+
+This API creates a wishlist when a JSON body comprising of an id, user id, name for the wishlist and the products associated with that wishlist is passed. 
+
+Example:
+
+Request Body (JSON)
+
+```
+{
+"id" : 1,
+"user_id" : 3,
+"wishlist_name" : "Name",
+"wishlist_products" : []
+
+}
+
+```
+
+Response : ``` HTTP_201_CREATED ```
+
+
+```
+{
+"id" : 1,
+"user_id" : 3,
+"wishlist_name" : "Name",
+"wishlist_products" : []
+
+}
+
+```
+
 
 ## Contents
 
