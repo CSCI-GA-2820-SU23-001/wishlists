@@ -319,7 +319,7 @@ Response : ``` HTTP_200_OK ```
 
 This API deletes a product from a wishlist whose wishlist id and product id are passed
 
-Example: http://127.0.0.1:8000/wishlists/1/products/1
+Example: http://127.0.0.1:8000/wishlists/1/products/17
 
 Response : ``` 204 NO_CONTENT ```
 
