@@ -260,7 +260,7 @@ class TestWishlistServer(TestCase):
             json=product1.serialize(),
             content_type="application/json",
         )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATEƒD)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
         product2 = Product(wishlist_id=wl2.id, product_id=1, product_name="product", product_price=1.1)
         resp = self.client.post(

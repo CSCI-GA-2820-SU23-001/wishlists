@@ -239,7 +239,7 @@ def update_product(product_id):
     app.logger.info(
         "Request to update product %d ", product_id
     )
-    product_list = Produƒct.find_all_pid(product_id)
+    product_list = Product.find_all_pid(product_id)
 
     if len(product_list) == 0:
         abort(
