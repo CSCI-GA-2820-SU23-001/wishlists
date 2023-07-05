@@ -104,36 +104,10 @@ class Product(db.Model):
         return self
 
     @classmethod
-    def init_db(cls, app):
-        """ Initializes the database session """
-        logger.info("Initializing Products database")
-        cls.app = app
-        # This is where we initialize SQLAlchemy from the Flask app
-        db.init_app(app)
-        app.app_context().push()
-        db.create_all()  # make our sqlalchemy tables
-
-    @classmethod
-    def all(cls):
-        """ Returns all Products in the database """
-        logger.info("Processing all Products")
-        return cls.query.all()
-
-    @classmethod
     def find(cls, by_id):
         """ Finds a Product by its id """
         logger.info("Processing lookup for Product with id %s ...", by_id)
         return cls.query.get(by_id)
-
-    @classmethod
-    def find_by_name(cls, by_name):
-        """Returns all Products with the given name
-
-        Args:
-            name (string): the name of the Product you want to match
-        """
-        logger.info("Processing name query for Product with name %s ...", by_name)
-        return cls.query.filter(cls.product_name == by_name)
 
 
 ######################################################################
