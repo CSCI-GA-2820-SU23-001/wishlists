@@ -62,6 +62,7 @@ jobs:
       - name: Run unit tests with green
         run: |
           export FLASK_APP=service:app
+          flask db-create
           green
         env:
           DATABASE_URI: "postgresql://postgres:wishlist@postgres:5432/wishlistdb"
