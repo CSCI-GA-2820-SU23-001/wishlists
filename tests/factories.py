@@ -21,8 +21,7 @@ from service.models import Wishlist, Product
 
 class WishlistFactory(factory.Factory):
     """Creates fake Wishlists"""
-
-    # pylint: disable=too-few-public-methods
+    # pylint: disable=too-few-public-methods, attribute-defined-outside-init
     class Meta:
         """Persistent class"""
         model = Wishlist

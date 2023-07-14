@@ -7,10 +7,10 @@ Test cases can be run with the following:
 import os
 import logging
 from unittest import TestCase
-from service import app
-from service.models import Wishlist, db, init_db
 from tests.factories import WishlistFactory, ProductFactory
 from service.common import status  # HTTP Status Codes
+from service import app
+from service.models import Wishlist, db, init_db
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -23,7 +23,7 @@ BASE_URL = "/wishlists"
 #  T E S T   C A S E S
 ######################################################################
 
-
+# pylint: disable=too-many-public-methods
 class TestWishlistServer(TestCase):
     """ Wishlist Server Tests """
 
