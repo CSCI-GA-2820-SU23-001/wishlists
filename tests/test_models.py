@@ -18,7 +18,7 @@ DATABASE_URI = os.getenv(
 #  W I S H L I S T   M O D E L   T E S T   C A S E S
 ######################################################################
 
-
+# pylint: disable=too-many-public-methods
 class TestWishlist(unittest.TestCase):
     """ Test Cases for Wishlist Model """
 
