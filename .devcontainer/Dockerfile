@@ -1,5 +1,5 @@
 # Image for a NYU Lab development environment
-FROM rofrano/nyu-devops-base:su23
+FROM rofrano/nyu-devops-base:sp23
 
 ## Uncomment below lines to add Selenium for BDD
 # RUN sudo apt-get update && \
