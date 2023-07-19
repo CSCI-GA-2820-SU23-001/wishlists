@@ -203,8 +203,17 @@ def list_products(wishlist_id):
             f"Wishlist with id '{wishlist_id}' cannot be found."
         )
 
-    # Get the products in the wishlist
     res = [product.serialize() for product in wishlist.wishlist_products]
+
+    # Filtering, if needed
+    product_id = request.args.get("product_id")
+    if product_id:
+        res = [product for product in res if product["product_id"] == int(product_id)]
+        if len(res) == 0:
+            abort(
+                status.HTTP_404_NOT_FOUND,
+                f"Product with id '{product_id}' cannot be found."
+            )
 
     return make_response(jsonify(res), status.HTTP_200_OK)
 
