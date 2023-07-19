@@ -284,6 +284,18 @@ class TestWishlist(unittest.TestCase):
         wishlist = Wishlist.find(wishlist.id)
         self.assertEqual(len(wishlist.wishlist_products), 0)
 
+    def test_find_by_product_id(self):
+        """It should Find a Product by product_id"""
+        wishlist = WishlistFactory()
+        product = ProductFactory(wishlist=wishlist)
+        wishlist.create()
+        # Fetch it back by product id
+        same_product = Product.find_by_product_id(product.product_id)
+        self.assertEqual(product.product_id, same_product[0].product_id)
+        self.assertEqual(product.wishlist_id, same_product[0].wishlist_id)
+        self.assertEqual(product.product_name, same_product[0].product_name)
+        self.assertEqual(product.product_price, same_product[0].product_price)
+
     def test_deserialize_product_key_error(self):
         """It should not Deserialize a product with a KeyError"""
         product = Product()

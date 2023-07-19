@@ -260,6 +260,30 @@ class TestWishlistServer(TestCase):
             self.assertEqual(data[i]['product_name'], product.product_name)
             self.assertEqual(data[i]['product_price'], product.product_price)
 
+    def test_get_products_by_product_id(self):
+        """ It should Get a Product with same product_id """
+        wishlist = self._create_wishlists(1)[0]
+        products = ProductFactory.create_batch(1)
+        for product in products:
+            resp = self.client.post(
+                f"{BASE_URL}/{wishlist.id}/products",
+                json=product.serialize(),
+                content_type="application/json",
+            )
+            self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # Retrieve the list of products in the wishlist
+        resp = self.client.get(
+            f"{BASE_URL}/{wishlist.id}/products?product_id={products[0].product_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        # Should not retrieve the list of products in the wishlist, when an incorrect id is passed
+        resp = self.client.get(
+            f"{BASE_URL}/{wishlist.id}/products?product_id={products[0].product_id + 1}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_cannot_list_products(self):
         """ It should fail to list the products in a non-existent wishlist """
         wishlist = self._create_wishlists(1)[0]

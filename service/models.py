@@ -109,6 +109,12 @@ class Product(db.Model):
         logger.info("Processing lookup for Product with id %s ...", by_id)
         return cls.query.get(by_id)
 
+    @classmethod
+    def find_by_product_id(cls, by_product_id):
+        """ Finds a Product by its id """
+        logger.info("Processing lookup for Product with product_id %s ...", by_product_id)
+        return cls.query.filter(cls.product_id == by_product_id).all()
+
 
 ######################################################################
 #  W I S H L I S T   M O D E L
