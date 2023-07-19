@@ -49,6 +49,7 @@ def list_all_wishlists():
     """
     app.logger.info("Request for a list of Wishlists")
 
+    # Filtering by wishlist name, if needed
     wishlist_name = request.args.get("wishlist_name")
     if wishlist_name:
         wishlists = Wishlist.find_by_name(wishlist_name)
@@ -56,12 +57,23 @@ def list_all_wishlists():
             abort(
                 status.HTTP_404_NOT_FOUND,
                 f"wishlist with '{wishlist_name}' doesn't exist.")
-        wishlists = wishlists[0].serialize()
+        wishlists = [wishlists[0].serialize()]
     else:
         # Return as an array of JSON
         wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
 
-    return make_response(jsonify(wishlists), status.HTTP_200_OK)
+    # Filtering by product id, if needed
+    product_id = request.args.get("product_id")
+    if product_id:
+        filtered_wishlists = []
+        for wishlist in wishlists:
+            for product in wishlist["wishlist_products"]:
+                if int(product_id) == product["product_id"]:
+                    filtered_wishlists.append(wishlist)
+    else:
+        filtered_wishlists = wishlists
+
+    return make_response(jsonify(filtered_wishlists), status.HTTP_200_OK)
 
 
 ######################################################################
