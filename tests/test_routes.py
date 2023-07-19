@@ -90,17 +90,55 @@ class TestWishlistServer(TestCase):
     def test_get_wishlist_by_name(self):
         """ It should Get a wishlist with same name """
         wls = self._create_wishlists(10)
-        resp = self.client.get('/wishlists')
+        resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(len(data), 10)
         wl_name = wls[0].wishlist_name
-        res = self.client.get(f'/wishlists?wishlist_name={wl_name}')
+        res = self.client.get(f'{BASE_URL}?wishlist_name={wl_name}')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.get_json()['wishlist_name'], wl_name)
+        self.assertEqual(res.get_json()[0]['wishlist_name'], wl_name)
         wr_name = "Wringsoffhasf"
-        res = self.client.get(f'/wishlists?wishlist_name={wr_name}')
+        res = self.client.get(f'{BASE_URL}?wishlist_name={wr_name}')
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_wishlists_with_a_product(self):
+        """ It should Get all Wishlists containing the specified product """
+        wishlists = self._create_wishlists(2)
+        products = ProductFactory.create_batch(2)
+        # Adding both products to wishlist 1
+        for product in products:
+            resp = self.client.post(
+                f"{BASE_URL}/{wishlists[0].id}/products",
+                json=product.serialize(),
+                content_type="application/json"
+            )
+            self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # Adding the second product to wishlist 2
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlists[1].id}/products",
+            json=products[1].serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # Retrieve the list of products in the wishlist
+        resp = self.client.get(
+            f"{BASE_URL}?product_id={products[0].product_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        resp_wishlists = resp.get_json()
+        self.assertEqual(len(resp_wishlists), 1)
+        self.assertEqual(resp_wishlists[0]['id'], wishlists[0].id)
+        # An empty list should be returned when the given product belongs to no wishlist
+        non_existent_product = ProductFactory()
+        resp = self.client.get(
+            f"{BASE_URL}?product_id={non_existent_product.product_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        resp_wishlists = resp.get_json()
+        self.assertEqual(len(resp_wishlists), 0)
 
     def test_create_a_wishlist(self):
         """ It should create a wishlist """
