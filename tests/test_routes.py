@@ -117,7 +117,7 @@ class TestWishlistServer(TestCase):
         # Adding the second product to wishlist 2
         resp = self.client.post(
             f"{BASE_URL}/{wishlists[1].id}/products",
-            json=product.serialize(),
+            json=products[1].serialize(),
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
