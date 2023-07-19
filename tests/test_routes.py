@@ -95,9 +95,12 @@ class TestWishlistServer(TestCase):
         data = resp.get_json()
         self.assertEqual(len(data), 10)
         wl_name = wls[0].wishlist_name
-        res = self.client.get('/wishlists', query_string=f'/wishlist_name={wl_name}')
+        res = self.client.get(f'/wishlists?wishlist_name={wl_name}')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.get_json()[0]['wishlist_name'], wl_name)
+        self.assertEqual(res.get_json()['wishlist_name'], wl_name)
+        wr_name = "Wringsoffhasf"
+        res = self.client.get(f'/wishlists?wishlist_name={wr_name}')
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_a_wishlist(self):
         """ It should create a wishlist """
