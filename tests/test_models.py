@@ -133,7 +133,7 @@ class TestWishlist(unittest.TestCase):
         same_wishlist = Wishlist.find_by_name(wishlist.wishlist_name)[0]
         self.assertEqual(same_wishlist.id, wishlist.id)
         self.assertEqual(same_wishlist.wishlist_name, wishlist.wishlist_name)
-        self.assertEqual(same_wishlist.user_id, wishlist.user_id)     
+        self.assertEqual(same_wishlist.user_id, wishlist.user_id)
 
     def test_serialize_a_wishlist(self):
         """It should Serialize a Wishlist"""
