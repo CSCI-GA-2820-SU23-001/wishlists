@@ -53,12 +53,11 @@ def list_all_wishlists():
     if wishlist_name:
         wishlists = Wishlist.find_by_name(wishlist_name)
         if len(wishlists)==0:
-           abort(
+            abort(
             status.HTTP_404_NOT_FOUND,
-            f"wishlist with '{wishlist_name}' doesn't exist."
-        )
+            f"wishlist with '{wishlist_name}' doesn't exist.")
         wishlists=wishlists[0].serialize()
-    else:
+    else :
         # Return as an array of JSON
         wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
 
@@ -148,7 +147,7 @@ def update_wishlist(wishlist_id):
     # Checking for conflicts when renaming
     update_wl = Wishlist.find_by_name(body['wishlist_name'])
     if len(update_wl)> 0:
-        abort(
+        abort (
             status.HTTP_409_CONFLICT,
             f"Wishlist with '{body['wishlist_name']}' already exists."
         )
