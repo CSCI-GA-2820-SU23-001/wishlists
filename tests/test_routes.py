@@ -87,6 +87,21 @@ class TestWishlistServer(TestCase):
         data = resp.get_json()
         self.assertEqual(len(data), 10)
 
+    def test_get_wishlist_by_name(self):
+        """ It should Get a wishlist with same name """
+        wls = self._create_wishlists(10)
+        resp = self.client.get('/wishlists')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 10)
+        wl_name = wls[0].wishlist_name
+        res = self.client.get(f'/wishlists?wishlist_name={wl_name}')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.get_json()['wishlist_name'], wl_name)
+        wr_name = "Wringsoffhasf"
+        res = self.client.get(f'/wishlists?wishlist_name={wr_name}')
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_create_a_wishlist(self):
         """ It should create a wishlist """
         wishlist = WishlistFactory()
@@ -412,7 +427,7 @@ class TestWishlistServer(TestCase):
         resp = self.client.delete(
             f"{BASE_URL}/{wishlist.id}/products/{product_id}",
             content_type="application/json"
-            )
+        )
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)     # assert that the product was removed successfully
         # Retrieve it back to make sure it isn't there
         resp = self.client.get(

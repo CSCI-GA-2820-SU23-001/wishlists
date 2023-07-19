@@ -226,4 +226,4 @@ class Wishlist(db.Model):
             name (string): the name of the Wishlists you want to match
         """
         logger.info("Processing name query for Wishlist with name %s ...", by_name)
-        return cls.query.filter(cls.wishlist_name == by_name)
+        return cls.query.filter(cls.wishlist_name == by_name).all()
