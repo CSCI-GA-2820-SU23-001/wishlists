@@ -48,9 +48,19 @@ def list_all_wishlists():
     This endpoint will return all Wishlists in the database
     """
     app.logger.info("Request for a list of Wishlists")
-
-    # Return as an array of JSON
-    wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
+    
+    wishlist_name = request.args.get("wishlist_name")
+    if wishlist_name:
+        wishlists = Wishlist.find_by_name(wishlist_name)
+        if len(wishlists)==0:
+           abort(
+            status.HTTP_404_NOT_FOUND,
+            f"wishlist with '{wishlist_name}' doesn't exist."
+        )
+        wishlists=wishlists[0].serialize()
+    else:
+        # Return as an array of JSON
+        wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
 
     return make_response(jsonify(wishlists), status.HTTP_200_OK)
 
@@ -94,7 +104,7 @@ def create_wishlist():
     # Create the wishlist
     wishlist = Wishlist()
     data = request.get_json()
-    if Wishlist.find_by_name(data["wishlist_name"]).count() > 0:
+    if len(Wishlist.find_by_name(data["wishlist_name"])) > 0:
         abort(
             status.HTTP_409_CONFLICT,
             f"Name: {data['wishlist_name']} has been taken."
@@ -137,7 +147,7 @@ def update_wishlist(wishlist_id):
 
     # Checking for conflicts when renaming
     update_wl = Wishlist.find_by_name(body['wishlist_name'])
-    if update_wl.count() > 0:
+    if len(update_wl)> 0:
         abort(
             status.HTTP_409_CONFLICT,
             f"Wishlist with '{body['wishlist_name']}' already exists."

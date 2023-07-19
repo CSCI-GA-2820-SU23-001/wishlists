@@ -87,6 +87,18 @@ class TestWishlistServer(TestCase):
         data = resp.get_json()
         self.assertEqual(len(data), 10)
 
+    def test_get_wishlist_by_name(self):
+        """ It should Get a wishlist with same name """
+        wls=self._create_wishlists(10)
+        resp = self.client.get('/wishlists')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 10)
+        wl_name=wls[0].wishlist_name
+        res = self.client.get('/wishlists', query_string=f'/wishlist_name={wl_name}')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.get_json()[0]['wishlist_name'],wl_name)
+
     def test_create_a_wishlist(self):
         """ It should create a wishlist """
         wishlist = WishlistFactory()
