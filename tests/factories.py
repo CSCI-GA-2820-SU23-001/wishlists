@@ -54,5 +54,5 @@ class ProductFactory(factory.Factory):
     wishlist_id = None
     product_id = factory.Faker("random_number")
     product_name = factory.Faker("word")
-    product_price = factory.Faker("pyfloat")
+    product_price = factory.Faker("pyfloat", positive=True)
     wishlist = factory.SubFactory(WishlistFactory)

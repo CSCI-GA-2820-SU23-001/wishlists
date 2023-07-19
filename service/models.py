@@ -92,6 +92,14 @@ class Product(db.Model):
             self.product_id = data["product_id"]
             self.product_name = data["product_name"]
             self.product_price = data["product_price"]
+            if type(self.product_price) not in [float, int]:
+                raise TypeError("price must be numeric")
+            if self.product_price < 0:
+                raise ValueError("price must be strictly positive")
+        except ValueError as error:
+            raise DataValidationError(
+                "Invalid Product: " + error.args[0]
+            ) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Product: missing " + error.args[0]

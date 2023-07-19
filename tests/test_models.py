@@ -305,3 +305,11 @@ class TestWishlist(unittest.TestCase):
         """It should not Deserialize a product with a TypeError"""
         product = Product()
         self.assertRaises(DataValidationError, product.deserialize, [])
+        data = {'product_id': 1234, 'product_name': "myProduct", 'product_price': "myPrice", 'wishlist_id': 5678}
+        self.assertRaises(DataValidationError, product.deserialize, data)
+
+    def test_deserialize_product_value_error(self):
+        """It should not Deserialize a product with a ValueError"""
+        product = Product()
+        data = {'product_id': 1234, 'product_name': "myProduct", 'product_price': -123.45, 'wishlist_id': 5678}
+        self.assertRaises(DataValidationError, product.deserialize, data)

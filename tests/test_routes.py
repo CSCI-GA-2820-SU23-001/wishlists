@@ -510,9 +510,28 @@ class TestWishlistServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
-    def test_bad_request(self):
+    def test_bad_wishlist_data(self):
         """It should fail to create a Wishlist when incorrect data is sent"""
         resp = self.client.post(BASE_URL, json={"wishlist_name": "not my wishlist"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_bad_product_data(self):
+        """It should fail to create a Product when incorrect data is sent"""
+        wishlist = self._create_wishlists(1)[0]
+        product = ProductFactory()
+        product.product_price = -123.45
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlist.id}/products",
+            json=product.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        product.product_price = "Hello, World"
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlist.id}/products",
+            json=product.serialize(),
+            content_type="application/json"
+        )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_method_not_allowed(self):
