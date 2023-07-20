@@ -514,11 +514,18 @@ class TestWishlistServer(TestCase):
         """It should fail to create a Wishlist when incorrect data is sent"""
         resp = self.client.post(BASE_URL, json={"wishlist_name": "not my wishlist"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        # Wishlist with user id of incorrect type
+        resp = self.client.post(BASE_URL, json={"user_id": "myID", "wishlist_name": "not my wishlist"})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        # Wishlist with name of incorrect type
+        resp = self.client.post(BASE_URL, json={"user_id": 1234, "wishlist_name": 678})
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_bad_product_data(self):
         """It should fail to create a Product when incorrect data is sent"""
         wishlist = self._create_wishlists(1)[0]
         product = ProductFactory()
+        # Product with negative price
         product.product_price = -123.45
         resp = self.client.post(
             f"{BASE_URL}/{wishlist.id}/products",
@@ -526,7 +533,26 @@ class TestWishlistServer(TestCase):
             content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        # Product with price of incorrect type
         product.product_price = "Hello, World"
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlist.id}/products",
+            json=product.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        # Product with name of incorrect type
+        product.product_price = 123.45
+        product.product_name = 123
+        resp = self.client.post(
+            f"{BASE_URL}/{wishlist.id}/products",
+            json=product.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        # Product with id of incorrect type
+        product.product_name = "myProduct"
+        product.product_id = "XYZ"
         resp = self.client.post(
             f"{BASE_URL}/{wishlist.id}/products",
             json=product.serialize(),

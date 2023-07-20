@@ -115,15 +115,13 @@ def create_wishlist():
     # Create the wishlist
     wishlist = Wishlist()
     data = request.get_json()
+    wishlist.deserialize(data)
     if len(Wishlist.find_by_name(data["wishlist_name"])) > 0:
         abort(
             status.HTTP_409_CONFLICT,
             f"Name: {data['wishlist_name']} has been taken."
         )
     else:
-        wishlist = Wishlist()
-        data = request.get_json()
-        wishlist.deserialize(data)
         wishlist.create()
 
     res = wishlist.serialize()
