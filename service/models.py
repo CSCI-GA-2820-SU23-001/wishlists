@@ -90,7 +90,11 @@ class Product(db.Model):
         try:
             self.wishlist_id = data["wishlist_id"]
             self.product_id = data["product_id"]
+            if not isinstance(self.product_id, int):
+                raise TypeError("id must be an integer")
             self.product_name = data["product_name"]
+            if not isinstance(self.product_name, str):
+                raise TypeError("name must be a string")
             self.product_price = data["product_price"]
             if type(self.product_price) not in [float, int]:
                 raise TypeError("price must be numeric")
@@ -192,7 +196,11 @@ class Wishlist(db.Model):
         """
         try:
             self.user_id = data["user_id"]
-            self.wishlist_name = data.get("wishlist_name")
+            if not isinstance(self.user_id, int):
+                raise TypeError("user id must be an integer")
+            self.wishlist_name = data["wishlist_name"]
+            if not isinstance(self.wishlist_name, str):
+                raise TypeError("name must be a string")
             product_list = data.get("wishlist_products")
             if product_list is not None:
                 for json_product in product_list:
