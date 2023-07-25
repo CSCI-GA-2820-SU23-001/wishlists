@@ -329,6 +329,16 @@ def remove_product(wishlist_id, product_id):
 
 
 ######################################################################
+# HEALTH CHECK FOR KUBERNETES
+######################################################################
+@app.route('/health')
+def check_kubernetes():
+    """
+    Health check for kubernetes
+    """
+    return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
+
+######################################################################
 # U T I L I T Y   F U N C T I O N S
 ######################################################################
 
