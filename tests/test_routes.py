@@ -564,3 +564,11 @@ class TestWishlistServer(TestCase):
         """It should not allow an illegal method call"""
         resp = self.client.put(BASE_URL, json={"wishlist_name": "rubbish"})
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_kubernetes(self):
+        """It should be a healthy kubernetes"""
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["status"], 200)
+        self.assertEqual(data["message"], "Healthy")
