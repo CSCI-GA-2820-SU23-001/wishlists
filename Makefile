@@ -1,5 +1,12 @@
 # These can be overidden with env vars.
+REGISTRY ?= us.icr.io
+NAMESPACE ?= nyu-devops
+IMAGE_NAME ?= wishlists-summer23
+IMAGE_TAG ?= 1.0
+IMAGE ?= $(REGISTRY)/$(NAMESPACE)/$(IMAGE_NAME):$(IMAGE_TAG)
+PLATFORM ?= "linux/amd64"
 CLUSTER ?= nyu-devops
+SPACE ?= dev
 
 .PHONY: help
 help: ## Display this help
@@ -7,6 +14,8 @@ help: ## Display this help
 
 .PHONY: all
 all: help
+
+##@ Development
 
 .PHONY: clean
 clean:	## Removes all dangling docker images
@@ -41,26 +50,59 @@ run: ## Run the service
 	$(info Starting service...)
 	honcho start
 
-.PHONY: cluster
-cluster: ## Create a K3D Kubernetes cluster with load balancer and registry
-	$(info Creating Kubernetes cluster with a registry and 1 node...)
-	k3d cluster create --agents 1 --registry-create cluster-registry:0.0.0.0:32000 --port '8080:80@loadbalancer'
+.PHONY: namespace
+namespace: ## Create the namespace assigned to the SPACE env variable
+	$(info Creatng the $(SPACE) namespace...)
+	kubectl create namespace $(SPACE) 
+	kubectl get secret all-icr-io -n default -o yaml | sed 's/default/$(SPACE)/g' | kubectl create -n $(SPACE) -f -
+	kubectl config set-context --current --namespace $(SPACE)
 
-.PHONY: cluster-rm
-cluster-rm: ## Remove a K3D Kubernetes cluster
-	$(info Removing Kubernetes cluster...)
-	k3d cluster delete
+############################################################
+# COMMANDS FOR DEPLOYING THE IMAGE
+############################################################
+
+##@ Deployment
 
 .PHONY: login
 login: ## Login to IBM Cloud using yur api key
 	$(info Logging into IBM Cloud cluster $(CLUSTER)...)
-	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/apikey.json
+	ibmcloud login -a cloud.ibm.com -g Default -r us-south --apikey @~/.bluemix/apikey.json
 	ibmcloud cr login
 	ibmcloud ks cluster config --cluster $(CLUSTER)
 	ibmcloud ks workers --cluster $(CLUSTER)
 	kubectl cluster-info
 
+.PHONY: push
+image-push: ## Push to a Docker image registry
+	$(info Logging into IBM Cloud cluster $(CLUSTER)...)
+	ibmcloud cr login
+	docker push $(IMAGE)
+
 .PHONY: deploy
 depoy: ## Deploy the service on local Kubernetes
 	$(info Deploying service locally...)
 	kubectl apply -f deploy/
+
+############################################################
+# COMMANDS FOR BUILDING THE IMAGE
+############################################################
+
+##@ Docker Build
+
+.PHONY: init
+init: export DOCKER_BUILDKIT=1
+init:	## Creates the buildx instance
+	$(info Initializing Builder...)
+	docker buildx create --use --name=qemu
+	docker buildx inspect --bootstrap
+
+.PHONY: build
+build:	## Build all of the project Docker images
+	$(info Building $(IMAGE) for $(PLATFORM)...)
+	docker buildx build --file Dockerfile  --pull --platform=$(PLATFORM) --tag $(IMAGE) --load .
+
+.PHONY: remove
+remove:	## Stop and remove the buildx builder
+	$(info Stopping and removing the builder image...)
+	docker buildx stop
+	docker buildx rm
