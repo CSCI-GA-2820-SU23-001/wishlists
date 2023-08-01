@@ -69,7 +69,6 @@ Request Body (JSON)
 "user_id" : 3,
 "wishlist_name" : "Name",
 "wishlist_products" : []
-
 }
 
 ```
@@ -81,7 +80,6 @@ Response : ``` HTTP_201_CREATED ```
 "user_id" : 3,
 "wishlist_name" : "Name",
 "wishlist_products" : []
-
 }
 
 ```
@@ -208,7 +206,6 @@ Request Body (JSON)
 "product_id" : "1",
 "product_name" : "Product 1",
 "product_price" : 250
-
 }
 ```
 Response : ``` HTTP_201_CREATED ```
