@@ -1,6 +1,10 @@
 # Image for a NYU Lab development environment
 FROM rofrano/pipeline-selenium
 
+# Become a regular user for development
+ARG USERNAME=vscode
+USER $USERNAME
+
 ## Uncomment below lines to add Selenium for BDD
 # RUN sudo apt-get update && \
 #     sudo apt-get install -y chromium-driver python3-selenium && \
