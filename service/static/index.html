@@ -29,7 +29,7 @@
             <div class="form-group">
               <label class="control-label col-sm-2" for="wishlist_id">Wishlist ID:</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" id="pet_id" placeholder="Enter ID of Wishlist">
+                <input type="number" class="form-control" id="wishlist_id" placeholder="Enter ID of Wishlist">
               </div>
               <div class="col-sm-4">
                 <button type="submit" class="btn btn-primary" id="retrieve-btn">Retrieve</button>
@@ -40,30 +40,19 @@
 
           <div class="form-horizontal">
 
-            <!-- NAME -->
+            <!-- User ID -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="wishlist_name">Name:</label>
+              <label class="control-label col-sm-2" for="user_id">User ID:</label>
+              <div class="col-sm-10">
+                <input type="number" class="form-control" id="user_id" placeholder="Enter ID for User">
+              </div>
+            </div>
+
+            <!-- Wishlist Name -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="wishlist_name">Wishlist Name:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="wishlist_name" placeholder="Enter name for Wishlist">
-              </div>
-            </div>
-
-            <!-- CATEGORY -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="wishlist_category">Category:</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="wishlist_category" placeholder="Enter category for Wishlist">
-              </div>
-            </div>
-
-            <!-- AVAILABLE -->
-            <div class="form-group">
-              <label class="control-label col-sm-2" for="wishlist_available">Available:</label>
-              <div class="col-sm-10">
-                <select class="form-control" id="wishlist_available">
-                  <option value="true" selected>True</option>
-                  <option value="false">False</option>
-                </select>
               </div>
             </div>
 
@@ -85,10 +74,9 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th class="col-md-1">ID</th>
-            <th class="col-md-4">Name</th>
-            <th class="col-md-4">Category</th>
-            <th class="col-md-3">Available</th>
+            <th class="col-md-1">Wishlist ID</th>
+            <th class="col-md-1">User ID</th>
+            <th class="col-md-4">Wishlist Name</th>
           </tr>
           </thead>
         </table>
@@ -96,7 +84,7 @@
 
       <footer>
         <br><br>
-        <p>&copy; NYU DevOps Company 2022</p>
+        <p>&copy; NYU DevOps Company Wishlist 2022 summer</p>
       </footer>
 
     </div> <!-- container -->
