@@ -7,14 +7,14 @@ $(function () {
     // Updates the form with data from the response
     function update_form_data(res) {
         $("#wishlist_id").val(res.id);
-        $("#user_id").val(res.user_id);
+        $("#wishlist_user_id").val(res.user_id);
         $("#wishlist_name").val(res.wishlist_name);
     }
 
     /// Clears all form fields
     function clear_form_data() {
         $("#wishlist_id").val("");
-        $("#user_id").val("");
+        $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
     }
 
@@ -43,7 +43,7 @@ $(function () {
     $("#create-btn").click(function () {
         clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
-        let user_id = parseInt($("#user_id").val());
+        let user_id = parseInt($("#wishlist_user_id").val());
         
         let data = {
             "wishlist_name": wishlist_name,
