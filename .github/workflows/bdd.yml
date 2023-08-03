@@ -24,8 +24,8 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: pgs3cr3t
-          POSTGRES_DB: testdb
+          POSTGRES_PASSWORD: wishlist
+          POSTGRES_DB: wishlistdb
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
@@ -56,8 +56,7 @@ jobs:
           curl -i http://localhost:8080/health
           echo "\n*** SERVER IS RUNNING ***"
         env:
-          DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
+          DATABASE_URI: "postgresql://postgres:wishlist@postgres:5432/wishlistdb"
 
       - name: Run Integration Tests
         run: behave
-        
