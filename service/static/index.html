@@ -164,9 +164,9 @@
     <div class="transparent-bg">
       <div class="form-horizontal"> 
         <div class="form-group">
-          <label class="control-label col-sm-2" for="wishlist_id">Wishlist ID:</label>
+          <label class="control-label col-sm-2" for="product_id">Product ID:</label>
           <div class="col-sm-6">
-            <input type="number" class="form-control" id="wishlist_id" placeholder="Enter ID of Wishlist">
+            <input type="number" class="form-control" id="product_id" placeholder="Enter ID of Product">
           </div>
           <div class="col-sm-4">
             <button type="submit" class="btn btn-primary rounded-btn" id="retrieve-btn">Retrieve</button>
@@ -177,19 +177,27 @@
 
       <div class="form-horizontal">
 
-        <!-- User ID -->
+        <!-- Wishlist ID -->
         <div class="form-group">
-          <label class="control-label col-sm-2" for="wishlist_user_id">User ID:</label>
+          <label class="control-label col-sm-2" for="wishlist_id_product_mapping">Wishlist ID:</label>
           <div class="col-sm-10">
-            <input type="number" class="form-control" id="wishlist_user_id" placeholder="Enter ID for User">
+            <input type="number" class="form-control" id="wishlist_id_product_mapping" placeholder="Enter ID for Wishlist">
           </div>
         </div>
 
-        <!-- Wishlist Name -->
+        <!-- Product Name -->
         <div class="form-group">
-          <label class="control-label col-sm-2" for="wishlist_name">Wishlist Name:</label>
+          <label class="control-label col-sm-2" for="Product_name">Product Name:</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="wishlist_name" placeholder="Enter name for Wishlist">
+            <input type="text" class="form-control" id="Product_name" placeholder="Enter name for Product">
+          </div>
+        </div>
+
+        <!-- Product Price -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="product_price">Price:</label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" id="product_price" placeholder="Enter price for Product">
           </div>
         </div>
 
