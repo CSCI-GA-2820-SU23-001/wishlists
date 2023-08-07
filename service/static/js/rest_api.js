@@ -12,6 +12,7 @@ $(function () {
     }
 
     function product_update_form_data(res) {
+        $("#product_model_id").val(res.id);
         $("#product_id").val(res.product_id);
         $("#product_name").val(res.product_name);
         $("#wishlist_id_product_mapping").val(res.wishlist_id);
@@ -235,10 +236,28 @@ $(function () {
     $("#product-update-btn").click(function () {
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_name = $("#product_name").val();
+        let product_model_id = parseInt($("#product_model_id").val());
         let product_id = parseInt($("#product_id").val());
         let product_price = parseInt($("#product_price").val());
 
+        if (wishlist_id == "") {
+            flash_message("Error: Wishlist ID must not be empty")
+            return
+        }
+        if (product_name == "") {
+            flash_message("Error: Product Name must not be empty")
+            return
+        }
+        if (product_id == "") {
+            flash_message("Error: Product ID must not be empty")
+            return
+        }
+        if (product_price == "") {
+            flash_message("Error: Product Price must not be empty")
+            return
+        }
         let data = {
+            "id": product_model_id,
             "wishlist_id": wishlist_id,
             "product_name": product_name,
             "product_id": product_id,
@@ -250,7 +269,7 @@ $(function () {
 
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/wishlists/${wishlist_id}/products/${product_id}`,
+                url: `/wishlists/${wishlist_id}/products/${product_model_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -273,13 +292,17 @@ $(function () {
     $("#product-retrieve-btn").click(function () {
         clear_search_result();
         let wishlist_id = $("#wishlist_id_product_mapping").val();
-        let product_id = $("#product_id").val();
+        let product_model_id = $("#product_model_id").val();
+        if (wishlist_id == "") {
+            flash_message("Error: Wishlist ID must not be empty")
+            return
+        }
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/wishlists/${wishlist_id}/products/${product_id}`,
+            url: `/wishlists/${wishlist_id}/products/${product_model_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -302,26 +325,30 @@ $(function () {
     // ****************************************
 
     $("#product-delete-btn").click(function () {
+        let wishlist_id = $("#wishlist_product_mapping_id").val();
+        let product_model_id = $("#product_model_id").val();
 
-        let wishlist_id = $("#wishlist_id").val();
-        let product_id = $("#product_id").val();
+        if (wishlist_id == "") {
+            flash_message("Error: Wishlist ID must not be empty")
+            return
+        }
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/wishlists/${wishlist_id}/products/${product_id}`,
+            url: `/wishlists/${wishlist_id}/products/${product_model_id}`,
             contentType: "application/json",
             data: '',
         })
 
         ajax.done(function(res){
-            product_clear_form_data()
+            product_clear_form_data(res)
             flash_message("Wishlist has been Deleted!")
         });
 
         ajax.fail(function(res){
-            flash_message("Server error!")
+            flash_message(res.responseJSON.message)
         });
     });
 
@@ -336,7 +363,7 @@ $(function () {
     });
 
     $("#product-clear-btn").click(function () {
-        $("#product_id").val("");
+        $("#product_model_id").val("");
         $("#flash_message").empty();
         product_clear_form_data()
     });

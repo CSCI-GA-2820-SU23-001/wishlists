@@ -164,9 +164,9 @@
     <div class="transparent-bg">
       <div class="form-horizontal"> 
         <div class="form-group">
-          <label class="control-label col-sm-2" for="product_id">Product ID:</label>
+          <label class="control-label col-sm-2" for="product_model_id">Product Model ID:</label>
           <div class="col-sm-6">
-            <input type="number" class="form-control" id="product_id" placeholder="Enter ID of Product">
+            <input type="number" class="form-control" id="product_model_id" placeholder="Enter Model ID of Product">
           </div>
           <div class="col-sm-4">
             <button type="submit" class="btn btn-primary rounded-btn" id="product-retrieve-btn">Retrieve</button>
@@ -185,6 +185,13 @@
           </div>
         </div>
 
+        <!-- Product ID-->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="product_id">Product ID:</label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" id="product_id" placeholder="Enter ID for Product">
+          </div>
+        </div>
         
         <!-- Product Name -->
         <div class="form-group">
@@ -205,7 +212,6 @@
         <!-- SUBMIT BUTTONS -->
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary rounded-btn" id="product-search-btn">Search</button>
             <button type="submit" class="btn btn-primary rounded-btn" id="product-clear-btn">Clear</button>
             <button type="submit" class="btn btn-success rounded-btn" id="product-create-btn">Create</button>
             <button type="submit" class="btn btn-warning rounded-btn" id="product-update-btn">Update</button>
