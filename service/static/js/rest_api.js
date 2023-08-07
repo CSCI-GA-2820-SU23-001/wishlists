@@ -235,8 +235,8 @@ $(function () {
     $("#product-update-btn").click(function () {
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_name = $("#product_name").val();
-        let product_id = $("product_id").val();
-        let product_price = $("product_price").val();
+        let product_id = parseInt($("#product_id").val());
+        let product_price = parseInt($("#product_price").val());
 
         let data = {
             "wishlist_id": wishlist_id,
@@ -273,7 +273,7 @@ $(function () {
     $("#product-retrieve-btn").click(function () {
         clear_search_result();
         let wishlist_id = $("#wishlist_id_product_mapping").val();
-        let product_id = $("product_id").val();
+        let product_id = $("#product_id").val();
 
         $("#flash_message").empty();
 
