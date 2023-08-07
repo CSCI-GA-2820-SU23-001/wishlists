@@ -31,8 +31,59 @@
       text-align: center;
       margin-right: 40px;
     }
+    /* Style the tab */
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      display: flex;
+    }
+
+    /* Style the buttons inside the tab */
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      flex: 1;
+    }
+
+    /* Change background color of buttons on hover */
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    /* Create an active/current tablink class */
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    /* Style the tab content */
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+      -webkit-animation: fadeEffect 1s;
+      animation: fadeEffect 1s;
+    }
+    /* Fade in tabs */
+    @-webkit-keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    @keyframes fadeEffect {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
   </style>
 </head>
+
 
 <body style="background-color: #a7c0ff;">
   <div class="page-header">
@@ -54,8 +105,13 @@
     </div>
   </div>
 
-  <!-- FORM -->
-  <div class="col-md-12" id="form_data">
+  <div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="defaultOpen">Wishlist</button>
+    <button class="tablinks" onclick="openCity(event, 'product_form_data')">Product</button>
+  </div>
+
+  <!-- WHISHLIST FORM -->
+  <div class="tabcontent" id="wishlist_form_data">
     <h3>Create, Retrieve, Update, and Delete a Wishlists:</h3>
     <div class="transparent-bg">
       <div class="form-horizontal">
@@ -102,6 +158,53 @@
     </div> <!-- form horizontal -->
   </div> <!-- end Form -->
 
+  <!-- PRODUCT FORM -->
+  <div class="tabcontent" id="product_form_data">
+    <h3>Create, Retrieve, Update, and Delete a Products:</h3>
+    <div class="transparent-bg">
+      <div class="form-horizontal"> 
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="wishlist_id">Wishlist ID:</label>
+          <div class="col-sm-6">
+            <input type="number" class="form-control" id="wishlist_id" placeholder="Enter ID of Wishlist">
+          </div>
+          <div class="col-sm-4">
+            <button type="submit" class="btn btn-primary rounded-btn" id="retrieve-btn">Retrieve</button>
+            <button type="submit" class="btn btn-danger rounded-btn" id="delete-btn">Delete</button>
+          </div>
+        </div>
+      </div> <!-- form horizontal -->
+
+      <div class="form-horizontal">
+
+        <!-- User ID -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="wishlist_user_id">User ID:</label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" id="wishlist_user_id" placeholder="Enter ID for User">
+          </div>
+        </div>
+
+        <!-- Wishlist Name -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="wishlist_name">Wishlist Name:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="wishlist_name" placeholder="Enter name for Wishlist">
+          </div>
+        </div>
+
+        <!-- SUBMIT BUTTONS -->
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary rounded-btn" id="search-btn">Search</button>
+            <button type="submit" class="btn btn-primary rounded-btn" id="clear-btn">Clear</button>
+            <button type="submit" class="btn btn-success rounded-btn" id="create-btn">Create</button>
+            <button type="submit" class="btn btn-warning rounded-btn" id="update-btn">Update</button>
+          </div>
+        </div>
+      </div>
+    </div> <!-- form horizontal -->
+  </div> <!-- end Form -->
 
   <!-- Search Results -->
   <div class="table-responsive col-md-12" id="search_results">
@@ -129,6 +232,23 @@
   <!-- YOUR REST API -->
   <script type="text/javascript" src="static/js/rest_api.js"></script>
 
+  <script>
+    function openCity(evt, Name) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(Name).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    document.getElementById("defaultOpen").click();
+    </script> 
 </body>
 
 </html>
