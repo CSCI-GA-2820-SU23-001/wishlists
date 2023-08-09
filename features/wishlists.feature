@@ -44,3 +44,13 @@ Feature: The wishlist service back-end
         And I should not see "wishlist_3" in the results
         And I should not see "wishlist_4" in the results
         And I should not see "wishlist_5" in the results
+
+    Scenario: List all Wishlists
+        When I visit the "Home Page"
+        And I press the "Search" button
+        Then I should see the message "Success"
+        And I should see "wishlist_1" in the results
+        And I should see "wishlist_2" in the results
+        And I should see "wishlist_3" in the results
+        And I should see "wishlist_4" in the results
+        And I should see "wishlist_5" in the results
