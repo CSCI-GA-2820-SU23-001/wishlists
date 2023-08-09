@@ -39,8 +39,8 @@ $(function () {
         $("#flash_message").append(message);
     }
 
-    function clear_search_result() {
-        $("#search_results").empty();
+    function wishlist_clear_search_result() {
+        $("#wishlist_search_results").empty();
         let table = '<table class="table table-striped" cellpadding="10">'
         table += '<thead><tr>'
         table += '<th class="col-md-1">Wishlist ID</th>'
@@ -48,7 +48,21 @@ $(function () {
         table += '<th class="col-md-4">Wishlist Name</th>'
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
-        $("#search_results").append(table);
+        $("#wishlist_search_results").append(table);
+    }
+
+    function product_clear_search_result() {
+        $("#product_search_results").empty();
+        let table = '<table class="table table-striped" cellpadding="10">'
+        table += '<thead><tr>'
+        table += '<th class="col-md-1">Product Model ID</th>'
+        table += '<th class="col-md-1">Wishlist ID</th>'
+        table += '<th class="col-md-1">Product ID</th>'
+        table += '<th class="col-md-4">Product Name</th>'
+        table += '<th class="col-md-2">Product Price</th>'
+        table += '</tr></thead><tbody>'
+        table += '</tbody></table>';
+        $("#product_search_results").append(table);
     }
 
     // ************************************************************************************
@@ -60,7 +74,7 @@ $(function () {
     // ****************************************
 
     $("#wishlist_create_btn").click(function () {
-        clear_search_result();
+        wishlist_clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
         
@@ -135,7 +149,7 @@ $(function () {
     // ****************************************
 
     $("#wishlist_retrieve_btn").click(function () {
-        clear_search_result();
+        wishlist_clear_search_result();
         let wishlist_id = $("#wishlist_id").val();
 
         $("#flash_message").empty();
@@ -372,8 +386,7 @@ $(function () {
     // Search for User's Wishlist
     // ****************************************
 
-    $("wishlist_search_btn").click(function () {
-
+    $("#wishlist_search_btn").click(function () {
         let wishlist_name = $("#wishlist_name").val();
 
         let queryString = ""
@@ -381,7 +394,7 @@ $(function () {
         if (wishlist_name) {
             queryString += 'wishlist_name=' + wishlist_name
         }
-
+    
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -393,7 +406,7 @@ $(function () {
         //TODO: search result won't clear out
         ajax.done(function(res){
             //alert(res.toSource())
-            $("#search_results").empty();
+            $("#wishlist_search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
             table += '<th class="col-md-1">Wishlist ID</th>'
@@ -409,7 +422,7 @@ $(function () {
                 }
             }
             table += '</tbody></table>';
-            $("#search_results").append(table);
+            $("#wishlist_search_results").append(table);
 
             // copy the first result to the form
             if (firstWishlist != "") {
@@ -420,10 +433,62 @@ $(function () {
         });
 
         ajax.fail(function(res){
-            clear_search_result()
+            wishlist_clear_search_result()
             flash_message(res.responseJSON.message)
         });
 
     });
 
+    $("#product_search_btn").click(function () {
+        let wishlist_name = $("#wishlist_name").val();
+
+        let queryString = ""
+
+        if (wishlist_name) {
+            queryString += 'wishlist_name=' + wishlist_name
+        }
+    
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "GET",
+            url: `/wishlists?${queryString}`,
+            contentType: "application/json",
+            data: ''
+        })
+        //TODO: search result won't clear out
+        ajax.done(function(res){
+            //alert(res.toSource())
+            $("#wishlist_search_results").empty();
+            let table = '<table class="table table-striped" cellpadding="10">'
+            table += '<thead><tr>'
+            table += '<th class="col-md-1">Wishlist ID</th>'
+            table += '<th class="col-md-1">User ID</th>'
+            table += '<th class="col-md-4">Wishlist Name</th>'
+            table += '</tr></thead><tbody>'
+            let firstWishlist = "";
+            for(let i = 0; i < res.length; i++) {
+                let wishlist = res[i];
+                table +=  `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td></tr>`;
+                if (i == 0) {
+                    firstWishlist = wishlist;
+                }
+            }
+            table += '</tbody></table>';
+            $("#wishlist_search_results").append(table);
+
+            // copy the first result to the form
+            if (firstWishlist != "") {
+                wishlist_update_form_data(firstWishlist)
+            }
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            wishlist_clear_search_result()
+            flash_message(res.responseJSON.message)
+        });
+
+    })
 })
