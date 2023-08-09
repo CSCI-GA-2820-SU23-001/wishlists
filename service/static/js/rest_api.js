@@ -44,14 +44,14 @@ $(function () {
         clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
-        
+
         let data = {
             "wishlist_name": wishlist_name,
             "user_id": user_id
         };
 
         $("#flash_message").empty();
-        
+
         let ajax = $.ajax({
             type: "POST",
             url: "/wishlists",
@@ -59,57 +59,53 @@ $(function () {
             data: JSON.stringify(data),
         });
 
-        ajax.done(function(res){
+        ajax.done(function (res) {
             update_form_data(res)
             flash_message("Success")
         });
 
-        ajax.fail(function(res){
+        ajax.fail(function (res) {
             flash_message(res.responseJSON.message)
         });
     });
 
 
     // ****************************************
-    // TODO: update a Pet
+    // Update a Wishlist
     // ****************************************
 
     $("#update-btn").click(function () {
+        clear_search_result();
 
-        let pet_id = $("#pet_id").val();
-        let name = $("#pet_name").val();
-        let category = $("#pet_category").val();
-        let available = $("#pet_available").val() == "true";
-        let gender = $("#pet_gender").val();
-        let birthday = $("#pet_birthday").val();
+        let wishlist_id = $("#wishlist_id").val();
+        let wishlist_name = $("#wishlist_name").val();
+        let user_id = parseInt($("#wishlist_user_id").val());
 
         let data = {
-            "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "wishlist_id": wishlist_id,
+            "wishlist_name": wishlist_name,
+            "user_id": user_id
         };
 
         $("#flash_message").empty();
 
         let ajax = $.ajax({
-                type: "PUT",
-                url: `/pets/${pet_id}`,
-                contentType: "application/json",
-                data: JSON.stringify(data)
-            })
-
-        ajax.done(function(res){
-            update_form_data(res)
-            flash_message("Success")
+            type: "PUT",
+            url: `/wishlists/${wishlist_id}`,  // Using template literals to insert the wishlist_id into the URL
+            contentType: "application/json",
+            data: JSON.stringify(data),
         });
 
-        ajax.fail(function(res){
-            flash_message(res.responseJSON.message)
+        ajax.done(function (res) {
+            update_form_data(res);
+            flash_message("Success");
         });
 
+        ajax.fail(function (res) {
+            flash_message(res.responseJSON.message);
+        });
     });
+
 
     // ****************************************
     // Retrieve a Wishlist
@@ -128,13 +124,13 @@ $(function () {
             data: ''
         })
 
-        ajax.done(function(res){
+        ajax.done(function (res) {
             //alert(res.toSource())
             update_form_data(res)
             flash_message("Success")
         });
 
-        ajax.fail(function(res){
+        ajax.fail(function (res) {
             clear_form_data()
             flash_message(res.responseJSON.message)
         });
@@ -158,12 +154,12 @@ $(function () {
             data: '',
         })
 
-        ajax.done(function(res){
+        ajax.done(function (res) {
             clear_form_data()
             flash_message("Wishlist has been Deleted!")
         });
 
-        ajax.fail(function(res){
+        ajax.fail(function (res) {
             flash_message("Server error!")
         });
     });
@@ -201,7 +197,7 @@ $(function () {
             data: ''
         })
         //TODO: search result won't clear out
-        ajax.done(function(res){
+        ajax.done(function (res) {
             //alert(res.toSource())
             $("#search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
@@ -211,9 +207,9 @@ $(function () {
             table += '<th class="col-md-4">Wishlist Name</th>'
             table += '</tr></thead><tbody>'
             let firstWishlist = "";
-            for(let i = 0; i < res.length; i++) {
+            for (let i = 0; i < res.length; i++) {
                 let wishlist = res[i];
-                table +=  `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td></tr>`;
+                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td></tr>`;
                 if (i == 0) {
                     firstWishlist = wishlist;
                 }
@@ -229,7 +225,7 @@ $(function () {
             flash_message("Success")
         });
 
-        ajax.fail(function(res){
+        ajax.fail(function (res) {
             clear_search_result()
             flash_message(res.responseJSON.message)
         });
