@@ -24,6 +24,7 @@ $(function () {
         $("#wishlist_id").val("");
         $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
+        wishlist_clear_search_result();
     }
 
     function product_clear_form_data() {
@@ -440,53 +441,77 @@ $(function () {
     });
 
     $("#product_search_btn").click(function () {
-        let wishlist_name = $("#wishlist_name").val();
+        let wishlist_id = $("#wishlist_id_product_mapping").val();
+        let product_name = $("#product_name").val();
+        let product_id = $("#product_id").val();
+        let product_price = $("#product_price").val();
 
+        if (wishlist_id == "") {
+            flash_message("Error: Wishlist ID must not be empty")
+            return
+        }
+        
         let queryString = ""
 
-        if (wishlist_name) {
-            queryString += 'wishlist_name=' + wishlist_name
+        if (product_name) {
+            queryString += 'product_name=' + name
         }
-    
+        if (product_id) {
+            if (queryString.length > 0) {
+                queryString += '&product_id=' + product_id
+            } else {
+                queryString += 'product_id=' + product_id
+            }
+        }
+        if (product_price) {
+            if (queryString.length > 0) {
+                queryString += '&product_price=' + product_price
+            } else {
+                queryString += ' product_price=' + product_price
+            }
+        }
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/wishlists?${queryString}`,
+            url: `/wishlists/${wishlist_id}/products?${queryString}`,
             contentType: "application/json",
             data: ''
         })
         //TODO: search result won't clear out
         ajax.done(function(res){
             //alert(res.toSource())
-            $("#wishlist_search_results").empty();
+            $("#product_search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
+            table += '<th class="col-md-1">Product Model ID</th>'
             table += '<th class="col-md-1">Wishlist ID</th>'
-            table += '<th class="col-md-1">User ID</th>'
-            table += '<th class="col-md-4">Wishlist Name</th>'
+            table += '<th class="col-md-1">Product ID</th>'
+            table += '<th class="col-md-4">Product Name</th>'
+            table += '<th class="col-md-2">Product Price</th>'
             table += '</tr></thead><tbody>'
-            let firstWishlist = "";
+            let firstProduct = "";
             for(let i = 0; i < res.length; i++) {
-                let wishlist = res[i];
-                table +=  `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td></tr>`;
+                let prod = res[i];
+                table +=  `<tr id="row_${i}"><td>${prod.id}</td><td>${prod.wishlist_id}</td><td>${prod.product_id}</td><td>${prod.product_name}</td><td>${prod.product_price}</td></tr>`;
                 if (i == 0) {
-                    firstWishlist = wishlist;
+                    firstProduct = prod;
                 }
             }
             table += '</tbody></table>';
-            $("#wishlist_search_results").append(table);
+            $("#product_search_results").append(table);
 
             // copy the first result to the form
-            if (firstWishlist != "") {
-                wishlist_update_form_data(firstWishlist)
+            if (firstProduct != "") {
+                product_update_form_data(firstProduct)
             }
 
             flash_message("Success")
         });
 
         ajax.fail(function(res){
-            wishlist_clear_search_result()
+            product_clear_search_result()
             flash_message(res.responseJSON.message)
         });
 
