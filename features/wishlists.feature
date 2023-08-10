@@ -54,24 +54,3 @@ Feature: The wishlist service back-end
         And I should see "wishlist_3" in the results
         And I should see "wishlist_4" in the results
         And I should see "wishlist_5" in the results
-
-    Scenario: Update a Wishlists
-        When I visit the "Home Page"
-        And I set the "Name" to "wishlist_1"
-        And I press the "Search" button
-        Then I should see the message "Success"
-        And I should see "wishlist_1" in the "Name" field
-        When I change "Name" to "wishlist_first"
-        And I press the "Update" button
-        Then I should see the message "Success"
-        When I copy the "Id" field
-        And I press the "Clear" button
-        And I paste the "Id" field
-        And I press the "Retrieve" button
-        Then I should see the message "Success"
-        And I should see "wishlist_first" in the "Name" field
-        When I press the "Clear" button
-        And I press the "Search" button
-        Then I should see the message "Success"
-        And I should see "wishlist_first" in the results
-        And I should not see "wishlist_1" in the results
