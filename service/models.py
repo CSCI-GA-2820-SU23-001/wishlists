@@ -91,7 +91,7 @@ class Product(db.Model):
             self.wishlist_id = data["wishlist_id"]
             self.product_id = data["product_id"]
             if not isinstance(self.product_id, int):
-                raise TypeError("id must be an integer")
+                raise TypeError("Product id must be an integer")
             self.product_name = data["product_name"]
             if not isinstance(self.product_name, str):
                 raise TypeError("name must be a string")
