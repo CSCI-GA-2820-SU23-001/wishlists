@@ -74,7 +74,7 @@ $(function () {
     // Create a Wishlist
     // ****************************************
 
-    $("#wishlist_create_btn").click(function () {
+    $("#create_wishlist_btn").click(function () {
         wishlist_clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
@@ -108,7 +108,7 @@ $(function () {
     // Update a Wishlist
     // ****************************************
 
-    $("#wishlist-update-btn").click(function () {
+    $("#update-wishlist_btn").click(function () {
         wishlist_clear_search_result();
 
         let wishlist_id = $("#wishlist_id").val();
@@ -145,7 +145,7 @@ $(function () {
     // Retrieve a Wishlist
     // ****************************************
 
-    $("#wishlist_retrieve_btn").click(function () {
+    $("#retrieve_wishlist_btn").click(function () {
         wishlist_clear_search_result();
         let wishlist_id = $("#wishlist_id").val();
 
@@ -175,7 +175,7 @@ $(function () {
     // Delete a Wishlist
     // ****************************************
 
-    $("#wishlist_delete_btn").click(function () {
+    $("#delete_wishlist_btn").click(function () {
 
         let wishlist_id = $("#wishlist_id").val();
 
@@ -207,7 +207,7 @@ $(function () {
     // Create a Product
     // ****************************************
 
-    $("#product_create_btn").click(function () {
+    $("#create_product_btn").click(function () {
         clear_search_result();
         let product_id = parseInt($("#product_id").val());
         let wishlist_id = $("#wishlist_id_product_mapping").val();
@@ -245,7 +245,7 @@ $(function () {
     // TODO: update a Product
     // ****************************************
 
-    $("#product_update_btn").click(function () {
+    $("#update_product_btn").click(function () {
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_name = $("#product_name").val();
         let product_model_id = parseInt($("#product_model_id").val());
@@ -301,7 +301,7 @@ $(function () {
     // Retrieve a Product
     // ****************************************
 
-    $("#product_retrieve_btn").click(function () {
+    $("#retrieve_product_btn").click(function () {
         clear_search_result();
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_model_id = $("#product_model_id").val();
@@ -336,7 +336,7 @@ $(function () {
     // Delete a Product
     // ****************************************
 
-    $("#product_delete_btn").click(function () {
+    $("#delete_product_btn").click(function () {
         let wishlist_id = $("#wishlist_product_mapping_id").val();
         let product_model_id = $("#product_model_id").val();
 
@@ -368,13 +368,13 @@ $(function () {
     // Clear the form
     // ****************************************
 
-    $("#wishlist_clear_btn").click(function () {
+    $("#clear_wishlist_btn").click(function () {
         $("#wishlist_id").val("");
         $("#flash_message").empty();
         wishlist_clear_form_data()
     });
 
-    $("#product_clear_btn").click(function () {
+    $("#clear_product_btn").click(function () {
         $("#product_model_id").val("");
         $("#flash_message").empty();
         product_clear_form_data()
@@ -384,7 +384,7 @@ $(function () {
     // Search for User's Wishlist
     // ****************************************
 
-    $("#wishlist_search_btn").click(function () {
+    $("#search_wishlist_btn").click(function () {
 
         let wishlist_name = $("#wishlist_name").val();
 
@@ -442,7 +442,7 @@ $(function () {
 
     });
 
-    $("#product_search_btn").click(function () {
+    $("#search_product_btn").click(function () {
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_name = $("#product_name").val();
         let product_id = $("#product_id").val();
