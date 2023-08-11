@@ -133,7 +133,7 @@ $(function () {
     // Update a Wishlist
     // ****************************************
 
-    $("#update-wishlist_btn").click(function () {
+    $("#update_wishlist_btn").click(function () {
         wishlist_clear_search_result();
 
         let wishlist_id = $("#wishlist_id").val();
