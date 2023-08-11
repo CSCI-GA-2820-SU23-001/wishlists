@@ -5,14 +5,14 @@ $(function () {
     // ****************************************
 
     // Updates the form with data from the response
-    function update_form_data(res) {
+    function wishlist_update_form_data(res) {
         $("#wishlist_id").val(res.id);
         $("#wishlist_user_id").val(res.user_id);
         $("#wishlist_name").val(res.wishlist_name);
     }
 
     /// Clears all form fields
-    function clear_form_data() {
+    function wishlist_clear_form_data() {
         $("#wishlist_id").val("");
         $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
@@ -24,8 +24,8 @@ $(function () {
         $("#flash_message").append(message);
     }
 
-    function clear_search_result() {
-        $("#search_results").empty();
+    function wishlist_clear_search_result() {
+        $("#search_wishlist_results").empty();
         let table = '<table class="table table-striped" cellpadding="10">'
         table += '<thead><tr>'
         table += '<th class="col-md-1">Wishlist ID</th>'
@@ -33,15 +33,15 @@ $(function () {
         table += '<th class="col-md-4">Wishlist Name</th>'
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
-        $("#search_results").append(table);
+        $("#search_wishlist_results").append(table);
     }
 
     // ****************************************
     // Create a Wishlist
     // ****************************************
 
-    $("#create-btn").click(function () {
-        clear_search_result();
+    $("#create-wishlist-btn").click(function () {
+        wishlist_clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
 
@@ -60,7 +60,7 @@ $(function () {
         });
 
         ajax.done(function (res) {
-            update_form_data(res)
+            wishlist_update_form_data(res)
             flash_message("Success")
         });
 
@@ -71,11 +71,11 @@ $(function () {
 
 
     // ****************************************
-    // Update a wishlist
+    // Update a Wishlist
     // ****************************************
 
-    $("#update-btn").click(function () {
-        clear_search_result();
+    $("#update-wishlist-btn").click(function () {
+        wishlist_clear_search_result();
 
         let wishlist_id = $("#wishlist_id").val();
         let wishlist_name = $("#wishlist_name").val();
@@ -97,7 +97,7 @@ $(function () {
         });
 
         ajax.done(function (res) {
-            update_form_data(res);
+            wishlist_update_form_data(res);
             flash_message("Success");
         });
 
@@ -106,12 +106,13 @@ $(function () {
         });
     });
 
+
     // ****************************************
     // Retrieve a Wishlist
     // ****************************************
 
-    $("#retrieve-btn").click(function () {
-        clear_search_result();
+    $("#retrieve-wishlist-btn").click(function () {
+        wishlist_clear_search_result();
         let wishlist_id = $("#wishlist_id").val();
 
         $("#flash_message").empty();
@@ -125,12 +126,12 @@ $(function () {
 
         ajax.done(function (res) {
             //alert(res.toSource())
-            update_form_data(res)
+            wishlist_update_form_data(res)
             flash_message("Success")
         });
 
         ajax.fail(function (res) {
-            clear_form_data()
+            wishlist_clear_form_data()
             flash_message(res.responseJSON.message)
         });
 
@@ -140,7 +141,7 @@ $(function () {
     // Delete a Wishlist
     // ****************************************
 
-    $("#delete-btn").click(function () {
+    $("#delete-wishlist-btn").click(function () {
 
         let wishlist_id = $("#wishlist_id").val();
 
@@ -154,7 +155,7 @@ $(function () {
         })
 
         ajax.done(function (res) {
-            clear_form_data()
+            wishlist_clear_form_data()
             flash_message("Wishlist has been Deleted!")
         });
 
@@ -167,17 +168,17 @@ $(function () {
     // Clear the form
     // ****************************************
 
-    $("#clear-btn").click(function () {
+    $("#clear-wishlist-btn").click(function () {
         $("#wishlist_id").val("");
         $("#flash_message").empty();
-        clear_form_data()
+        wishlist_clear_form_data()
     });
 
     // ****************************************
     // Search for User's Wishlist
     // ****************************************
 
-    $("#search-btn").click(function () {
+    $("#search-wishlist-btn").click(function () {
 
         let wishlist_name = $("#wishlist_name").val();
 
@@ -198,7 +199,7 @@ $(function () {
         //TODO: search result won't clear out
         ajax.done(function (res) {
             //alert(res.toSource())
-            $("#search_results").empty();
+            $("#search_wishlist_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
             table += '<th class="col-md-1">Wishlist ID</th>'
@@ -214,18 +215,18 @@ $(function () {
                 }
             }
             table += '</tbody></table>';
-            $("#search_results").append(table);
+            $("#search_wishlist_results").append(table);
 
             // copy the first result to the form
             if (firstWishlist != "") {
-                update_form_data(firstWishlist)
+                wishlist_update_form_data(firstWishlist)
             }
 
             flash_message("Success")
         });
 
         ajax.fail(function (res) {
-            clear_search_result()
+            wishlist_clear_search_result()
             flash_message(res.responseJSON.message)
         });
 
