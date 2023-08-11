@@ -159,26 +159,23 @@
     </div> <!-- form horizontal -->
 
     <!-- PRODUCT LISTS-->
-        
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th scope="col">Project ID</th>
-        <th scope="col">Product Name</th>
-        <th scope="col">Product Price</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td scope="row"> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
-        <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
-        <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
-        <td> <button type="submit" class="btn btn-danger rounded-btn">Delete</button></td>
-      </tr>
-    </tbody>
-  </table>
-
+  <div class="form-group">  
+    <table class="table table-bordered" id="product_list_result">
+      <thead>
+        <tr>
+          <th scope="col">Project ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Product Price</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="product_list_body">
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Append Product List</button>  
+  </div>
     <!-- Wishlist Search Results -->
     <table class="table table-striped" id="wishlist_search_results">
         <thead>
@@ -284,7 +281,6 @@
 
   <!-- YOUR REST API -->
   <script type="text/javascript" src="static/js/rest_api.js"></script>
-  <script type="text/javascript" src="static/js/dynamic-list-script.js"></script>
 
   <script>
     function openCity(evt, Name) {

@@ -31,7 +31,8 @@ $(function () {
         $("#product_id").val("");
         $("#product_name").val("");
         $("#wishlist_id_product_mapping").val("");
-        $("#product_price").val("");    
+        $("#product_price").val("");
+        product_clear_search_result();
     }
 
     // Updates the flash message area
@@ -42,6 +43,7 @@ $(function () {
 
     function wishlist_clear_search_result() {
         $("#wishlist_search_results").empty();
+        $("#product_list_body").empty();
         let table = '<table class="table table-striped" cellpadding="10">'
         table += '<thead><tr>'
         table += '<th class="col-md-1">Wishlist ID</th>'
@@ -64,6 +66,29 @@ $(function () {
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
         $("#product_search_results").append(table);
+    }
+
+    var product_list_rowIdx = 0;
+
+    function append_existed_product_list(product_id, product_name, product_price) {
+        $("#product_list_body").append(
+        `<tr id="product_list_row_${++product_list_rowIdx}">
+            <td> <input type="text" name="text" class="form-control"  value=${product_id} readonly></td>
+            <td> <input type="text" name="text" class="form-control"  value=${product_name} readonly></td>
+            <td> <input type="text" name="text" class="form-control"  value=${product_price} readonly></td>
+            <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
+        </tr>`);
+    }
+
+
+    function wishlist_update_product_list_result(res) {
+        $("#product_list_body").empty();
+        product_list_rowIdx = 0;
+        var products = res.wishlist_products;
+
+        for(let i = 0; i < products.length; i++) {
+            append_existed_product_list(products[i].product_id, products[i].product_name, products[i].product_price);
+        }
     }
 
     // ************************************************************************************
@@ -140,7 +165,6 @@ $(function () {
         });
     });
 
-
     // ****************************************
     // Retrieve a Wishlist
     // ****************************************
@@ -161,6 +185,7 @@ $(function () {
         ajax.done(function (res) {
             //alert(res.toSource())
             wishlist_update_form_data(res)
+            wishlist_update_product_list_result(res)
             flash_message("Success")
         });
 
@@ -208,7 +233,7 @@ $(function () {
     // ****************************************
 
     $("#create_product_btn").click(function () {
-        clear_search_result();
+        product_clear_search_result();
         let product_id = parseInt($("#product_id").val());
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_name = $("#product_name").val();
@@ -302,7 +327,7 @@ $(function () {
     // ****************************************
 
     $("#retrieve_product_btn").click(function () {
-        clear_search_result();
+        product_clear_search_result();
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_model_id = $("#product_model_id").val();
         if (wishlist_id == "") {
@@ -310,6 +335,10 @@ $(function () {
             return
         }
 
+        if (product_model_id == "") {
+            flash_message("Error: Product Model ID must not be empty")
+            return
+        }
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -517,5 +546,39 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
 
-    })
-})
+    });
+
+    $("#append_product_list_btn").click(function () {
+        $("#product_list_body").append(
+        `<tr id="product_list_row_${++product_list_rowIdx}">
+            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
+            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
+            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
+            <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
+        </tr>`);
+    });
+
+    $('#product_list_body').on('click', '.remove', function () {
+        var child = $(this).closest('tr').nextAll();
+    
+        // Iterating across all the rows 
+        // obtained to change the index
+        child.each(function () {
+            
+            // Getting <tr> id.
+            var id = $(this).attr('id');
+    
+            // Gets the row number from <tr> id.
+            var dig = parseInt(id.substring(1));
+    
+            // Modifying row id.
+            $(this).attr('id', `product_list_row_${dig - 1}`);
+        });
+    
+        // Removing the current row.
+        $(this).closest('tr').remove();
+    
+        // Decreasing the total number of rows by 1.
+        product_list_rowIdx--;
+    });
+});
