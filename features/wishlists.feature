@@ -59,13 +59,13 @@ Feature: The wishlist service back-end
         When I visit the "Home Page"
         And I set the "User ID" to "9876"
         And I set the "Name" to "Test Delete"
-        And I press the "Create" button
+        And I press the "Create-Wishlist" button
         Then I should see the message "Success"
         When I copy the "Id" field
-        And I press the "Clear" button
+        And I press the "Clear-Wishlist" button
         Then the "Id" field should be empty
         And the "User ID" field should be empty
         And the "Name" field should be empty
         When I paste the "Id" field
-        And I press the "Delete" button
+        And I press the "Delete-Wishlist" button
         Then I should see the message "Wishlist has been Deleted!"
