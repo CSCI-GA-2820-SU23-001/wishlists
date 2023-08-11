@@ -30,6 +30,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
+ID_PREFIX = 'wishlist_'
+
 @when('I visit the "Home Page"')
 def step_impl(context):
     """ Make a call to the base URL """
@@ -47,25 +49,25 @@ def step_impl(context, text_string):
 
 @when('I set the "{element_name}" to "{text_string}"')
 def step_impl(context, element_name, text_string):
-    element_id = element_name.lower().replace(' ', '_')
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = context.driver.find_element(By.ID, element_id)
     element.clear()
     element.send_keys(text_string)
 
 @then('the "{element_name}" field should be empty')
 def step_impl(context, element_name):
-    element_id = element_name.lower().replace(' ', '_')
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = context.driver.find_element(By.ID, element_id)
     assert(element.get_attribute('value') == '')
 
 @when('I press the "{button}" button')
 def step_impl(context, button):
-    button_id = button.lower() + '_btn'
+    button_id = button.lower() + '-btn'
     context.driver.find_element(By.ID, button_id).click()
 
 @then('I should see "{text_string}" in the "{element_name}" field')
 def step_impl(context, text_string, element_name):
-    element_id = element_name.lower().replace(' ', '_')
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element_value(
             (By.ID, element_id),
@@ -86,7 +88,7 @@ def step_impl(context, message):
 
 @when('I copy the "{element_name}" field')
 def step_impl(context, element_name):
-    element_id = element_name.lower().replace(' ', '_')
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
@@ -95,26 +97,26 @@ def step_impl(context, element_name):
 
 @when('I paste the "{element_name}" field')
 def step_impl(context, element_name):
-    element_id = element_name.lower().replace(' ', '_')
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
     element.clear()
     element.send_keys(context.clipboard)
 
-@then('I should see "{name}" in the wishlist results')
+@then('I should see "{name}" in the results')
 def step_impl(context, name):
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'wishlist_search_results'),
+            (By.ID, 'search_wishlist_results'),
             name
         )
     )
     assert(found)
 
-@then('I should not see "{name}" in the wishlist results')
+@then('I should not see "{name}" in the results')
 def step_impl(context, name):
-    element = context.driver.find_element(By.ID, 'wishlist_search_results')
+    element = context.driver.find_element(By.ID, 'search_wishlist_results')
     assert(name not in element.text)
 
 @when('I change "{element_name}" to "{text_string}"')

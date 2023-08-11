@@ -19,53 +19,53 @@ Feature: The wishlist service back-end
 
     Scenario: Create a Wishlist
         When I visit the "Home Page"
-        And I set the "Wishlist User ID" to "1234"
-        And I set the "Wishlist Name" to "NYE Wishlist"
-        And I press the "Create_Wishlist" button
+        And I set the "User ID" to "1234"
+        And I set the "Name" to "NYE Wishlist"
+        And I press the "Create-Wishlist" button
         Then I should see the message "Success"
-        When I copy the "Wishlist Id" field
-        And I press the "Clear_Wishlist" button
-        Then the "Wishlist Id" field should be empty
-        And the "Wishlist User ID" field should be empty
-        And the "Wishlist Name" field should be empty
-        When I paste the "Wishlist Id" field
-        And I press the "Retrieve_Wishlist" button
+        When I copy the "Id" field
+        And I press the "Clear-Wishlist" button
+        Then the "Id" field should be empty
+        And the "User ID" field should be empty
+        And the "Name" field should be empty
+        When I paste the "Id" field
+        And I press the "Retrieve-Wishlist" button
         Then I should see the message "Success"
-        And I should see "1234" in the "Wishlist User ID" field
-        And I should see "NYE Wishlist" in the "Wishlist Name" field
+        And I should see "1234" in the "User ID" field
+        And I should see "NYE Wishlist" in the "Name" field
 
     Scenario: Get a Wishlist by Name
         When I visit the "Home Page"
-        And I set the "Wishlist Name" to "wishlist_1"
-        And I press the "Search_Wishlist" button
+        And I set the "Name" to "wishlist_1"
+        And I press the "Search-Wishlist" button
         Then I should see the message "Success"
-        And I should see "wishlist_1" in the wishlist results
-        And I should not see "wishlist_2" in the wishlist results
-        And I should not see "wishlist_3" in the wishlist results
-        And I should not see "wishlist_4" in the wishlist results
-        And I should not see "wishlist_5" in the wishlist results
+        And I should see "wishlist_1" in the results
+        And I should not see "wishlist_2" in the results
+        And I should not see "wishlist_3" in the results
+        And I should not see "wishlist_4" in the results
+        And I should not see "wishlist_5" in the results
 
     Scenario: List all Wishlists
         When I visit the "Home Page"
-        And I press the "Search_Wishlist" button
+        And I press the "Search-Wishlist" button
         Then I should see the message "Success"
-        And I should see "wishlist_1" in the wishlist results
-        And I should see "wishlist_2" in the wishlist results
-        And I should see "wishlist_3" in the wishlist results
-        And I should see "wishlist_4" in the wishlist results
-        And I should see "wishlist_5" in the wishlist results
+        And I should see "wishlist_1" in the results
+        And I should see "wishlist_2" in the results
+        And I should see "wishlist_3" in the results
+        And I should see "wishlist_4" in the results
+        And I should see "wishlist_5" in the results
 
     Scenario: Delete a Wishlist
         When I visit the "Home Page"
-        And I set the "Wishlist User ID" to "9876"
-        And I set the "Wishlist Name" to "Test Delete"
-        And I press the "Create_Wishlist" button
+        And I set the "User ID" to "9876"
+        And I set the "Name" to "Test Delete"
+        And I press the "Create-Wishlist" button
         Then I should see the message "Success"
-        When I copy the "Wishlist Id" field
-        And I press the "Clear_Wishlist" button
-        Then the "Wishlist Id" field should be empty
-        And the "Wishlist User ID" field should be empty
-        And the "Wishlist Name" field should be empty
-        When I paste the "Wishlist Id" field
-        And I press the "Delete_Wishlist" button
+        When I copy the "Id" field
+        And I press the "Clear-Wishlist" button
+        Then the "Id" field should be empty
+        And the "User ID" field should be empty
+        And the "Name" field should be empty
+        When I paste the "Id" field
+        And I press the "Delete-Wishlist" button
         Then I should see the message "Wishlist has been Deleted!"

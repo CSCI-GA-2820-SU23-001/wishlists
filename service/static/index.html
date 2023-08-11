@@ -31,59 +31,8 @@
       text-align: center;
       margin-right: 40px;
     }
-    /* Style the tab */
-    .tab {
-      overflow: hidden;
-      border: 1px solid #ccc;
-      background-color: #f1f1f1;
-      display: flex;
-    }
-
-    /* Style the buttons inside the tab */
-    .tab button {
-      background-color: inherit;
-      float: left;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      padding: 14px 16px;
-      transition: 0.3s;
-      font-size: 17px;
-      flex: 1;
-    }
-
-    /* Change background color of buttons on hover */
-    .tab button:hover {
-      background-color: #ddd;
-    }
-
-    /* Create an active/current tablink class */
-    .tab button.active {
-      background-color: #ccc;
-    }
-
-    /* Style the tab content */
-    .tabcontent {
-      display: none;
-      padding: 6px 12px;
-      border: 1px solid #ccc;
-      border-top: none;
-      -webkit-animation: fadeEffect 1s;
-      animation: fadeEffect 1s;
-    }
-    /* Fade in tabs */
-    @-webkit-keyframes fadeEffect {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    @keyframes fadeEffect {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
   </style>
 </head>
-
 
 <body style="background-color: #a7c0ff;">
   <div class="page-header">
@@ -105,13 +54,8 @@
     </div>
   </div>
 
-  <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="defaultOpen">Wishlist</button>
-    <button class="tablinks" onclick="openCity(event, 'product_form_data')">Product</button>
-  </div>
-
-  <!-- WHISHLIST FORM -->
-  <div class="tabcontent" id="wishlist_form_data">
+  <!-- WISHLIST FORM -->
+  <div class="col-md-12" id="form_data">
     <h3>Create, Retrieve, Update, and Delete a Wishlists:</h3>
     <div class="transparent-bg">
       <div class="form-horizontal">
@@ -121,8 +65,8 @@
             <input type="number" class="form-control" id="wishlist_id" placeholder="Enter ID of Wishlist">
           </div>
           <div class="col-sm-4">
-            <button type="submit" class="btn btn-primary rounded-btn" id="retrieve_wishlist_btn">Retrieve</button>
-            <button type="submit" class="btn btn-danger rounded-btn" id="delete_wishlist_btn">Delete</button>
+            <button type="submit" class="btn btn-primary rounded-btn" id="retrieve-wishlist-btn">Retrieve</button>
+            <button type="submit" class="btn btn-danger rounded-btn" id="delete-wishlist-btn">Delete</button>
           </div>
         </div>
       </div> <!-- form horizontal -->
@@ -148,107 +92,29 @@
         <!-- SUBMIT BUTTONS -->
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary rounded-btn" id="search_wishlist_btn">Search</button>
-            <button type="submit" class="btn btn-primary rounded-btn" id="clear_wishlist_btn">Clear</button>
-            <button type="submit" class="btn btn-success rounded-btn" id="create_wishlist_btn">Create</button>
-            <button type="submit" class="btn btn-warning rounded-btn" id="update_wishlist_btn">Update</button>
+            <button type="submit" class="btn btn-primary rounded-btn" id="search-wishlist-btn">Search</button>
+            <button type="submit" class="btn btn-primary rounded-btn" id="clear-wishlist-btn">Clear</button>
+            <button type="submit" class="btn btn-success rounded-btn" id="create-wishlist-btn">Create</button>
+            <button type="submit" class="btn btn-warning rounded-btn" id="update-wishlist-btn">Update</button>
           </div>
         </div>
       </div>
     </div> <!-- form horizontal -->
-
-    <!-- Wishlist Search Results -->
-    <table class="table table-striped" id="wishlist_search_results">
-        <thead>
-          <tr>
-            <th class="col-md-1">Wishlist ID</th>
-            <th class="col-md-1">User ID</th>
-            <th class="col-md-4">Wishlist Name</th>
-          </tr>
-        </thead>
-    </table>
-    
   </div> <!-- end Form -->
 
-  <!-- PRODUCT FORM -->
-  <div class="tabcontent" id="product_form_data">
-    <h3>Create, Retrieve, Update, and Delete a Products:</h3>
-    <div class="transparent-bg">
-      <div class="form-horizontal"> 
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="product_model_id">Product Model ID:</label>
-          <div class="col-sm-6">
-            <input type="number" class="form-control" id="product_model_id" placeholder="Enter Model ID of Product">
-          </div>
-          <div class="col-sm-4">
-            <button type="submit" class="btn btn-primary rounded-btn" id="retrieve_product_btn">Retrieve</button>
-            <button type="submit" class="btn btn-danger rounded-btn" id="delete_product_btn">Delete</button>
-          </div>
-        </div>
-      </div> <!-- form horizontal -->
 
-      <div class="form-horizontal">
-
-        <!-- Wishlist ID Product Mapping-->
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="wishlist_id_product_mapping">Wishlist ID:</label>
-          <div class="col-sm-10">
-            <input type="number" class="form-control" id="wishlist_id_product_mapping" placeholder="Enter ID for Wishlist">
-          </div>
-        </div>
-
-        <!-- Product ID-->
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="product_id">Product ID:</label>
-          <div class="col-sm-10">
-            <input type="number" class="form-control" id="product_id" placeholder="Enter ID for Product">
-          </div>
-        </div>
-        
-        <!-- Product Name -->
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="Product_name">Product Name:</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="product_name" placeholder="Enter name for Product">
-          </div>
-        </div>
-
-        <!-- Product Price -->
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="product_price">Price:</label>
-          <div class="col-sm-10">
-            <input type="number" class="form-control" id="product_price" placeholder="Enter price for Product">
-          </div>
-        </div>
-
-        <!-- SUBMIT BUTTONS -->
-        <div class="form-group">
-          <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary rounded-btn" id="search_product_btn">Search</button>
-            <button type="submit" class="btn btn-primary rounded-btn" id="clear_product_btn">Clear</button>
-            <button type="submit" class="btn btn-success rounded-btn" id="create_product_btn">Create</button>
-            <button type="submit" class="btn btn-warning rounded-btn" id="update_product_btn">Update</button>
-          </div>
-        </div>
-      </div>
-    </div> <!-- form horizontal -->
-
-    <!-- Product Search Results -->
-    <table class="table table-striped" id="product_search_results">
-        <thead>
-          <tr>
-            <th class="col-md-1">Product Model ID</th>
-            <th class="col-md-1">Wishlist ID</th>
-            <th class="col-md-1">Product ID</th>
-            <th class="col-md-4">Product Name</th>
-            <th class="col-md-2">Product Price</th>
-          </tr>
-        </thead>
+  <!-- Search Results -->
+  <div class="table-responsive col-md-12" id="search_wishlist_results">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-md-1">Wishlist ID</th>
+          <th class="col-md-1">User ID</th>
+          <th class="col-md-4">Wishlist Name</th>
+        </tr>
+      </thead>
     </table>
-
-  </div> <!-- end Form -->
-
-  
+  </div>
 
   <footer>
     <br><br>
@@ -263,23 +129,6 @@
   <!-- YOUR REST API -->
   <script type="text/javascript" src="static/js/rest_api.js"></script>
 
-  <script>
-    function openCity(evt, Name) {
-      var i, tabcontent, tablinks;
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-      }
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-      document.getElementById(Name).style.display = "block";
-      evt.currentTarget.className += " active";
-    }
-
-    document.getElementById("defaultOpen").click();
-    </script> 
 </body>
 
 </html>
