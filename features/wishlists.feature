@@ -21,15 +21,15 @@ Feature: The wishlist service back-end
         When I visit the "Home Page"
         And I set the "User ID" to "1234"
         And I set the "Name" to "NYE Wishlist"
-        And I press the "Create" button
+        And I press the "Create-Wishlist" button
         Then I should see the message "Success"
         When I copy the "Id" field
-        And I press the "Clear" button
+        And I press the "Clear-Wishlist" button
         Then the "Id" field should be empty
         And the "User ID" field should be empty
         And the "Name" field should be empty
         When I paste the "Id" field
-        And I press the "Retrieve" button
+        And I press the "Retrieve-Wishlist" button
         Then I should see the message "Success"
         And I should see "1234" in the "User ID" field
         And I should see "NYE Wishlist" in the "Name" field
@@ -37,7 +37,7 @@ Feature: The wishlist service back-end
     Scenario: Get a Wishlist by Name
         When I visit the "Home Page"
         And I set the "Name" to "wishlist_1"
-        And I press the "Search" button
+        And I press the "Search-Wishlist" button
         Then I should see the message "Success"
         And I should see "wishlist_1" in the results
         And I should not see "wishlist_2" in the results
@@ -47,10 +47,25 @@ Feature: The wishlist service back-end
 
     Scenario: List all Wishlists
         When I visit the "Home Page"
-        And I press the "Search" button
+        And I press the "Search-Wishlist" button
         Then I should see the message "Success"
         And I should see "wishlist_1" in the results
         And I should see "wishlist_2" in the results
         And I should see "wishlist_3" in the results
         And I should see "wishlist_4" in the results
         And I should see "wishlist_5" in the results
+
+    Scenario: Delete a Wishlist
+        When I visit the "Home Page"
+        And I set the "User ID" to "9876"
+        And I set the "Name" to "Test Delete"
+        And I press the "Create-Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Id" field
+        And I press the "Clear-Wishlist" button
+        Then the "Id" field should be empty
+        And the "User ID" field should be empty
+        And the "Name" field should be empty
+        When I paste the "Id" field
+        And I press the "Delete-Wishlist" button
+        Then I should see the message "Wishlist has been Deleted!"
