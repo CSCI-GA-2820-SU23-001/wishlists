@@ -28,6 +28,7 @@ $(function () {
     }
 
     function product_clear_form_data() {
+        $("#product_model_id").val("");
         $("#product_id").val("");
         $("#product_name").val("");
         $("#wishlist_id_product_mapping").val("");
@@ -133,7 +134,7 @@ $(function () {
     // Update a Wishlist
     // ****************************************
 
-    $("#update-wishlist_btn").click(function () {
+    $("#update_wishlist_btn").click(function () {
         wishlist_clear_search_result();
 
         let wishlist_id = $("#wishlist_id").val();
@@ -353,7 +354,7 @@ $(function () {
             product_update_form_data(res)
             flash_message("Success")
         });
-
+        flash_message(`/wishlists/${wishlist_id}/products/${product_model_id}`)
         ajax.fail(function(res){
             product_clear_form_data()
             flash_message(res.responseJSON.message)
@@ -366,11 +367,16 @@ $(function () {
     // ****************************************
 
     $("#delete_product_btn").click(function () {
-        let wishlist_id = $("#wishlist_product_mapping_id").val();
+        let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_model_id = $("#product_model_id").val();
 
         if (wishlist_id == "") {
             flash_message("Error: Wishlist ID must not be empty")
+            return
+        }
+
+        if (product_model_id == "") {
+            flash_message("Error: Product Model ID must not be empty")
             return
         }
 
@@ -385,7 +391,8 @@ $(function () {
 
         ajax.done(function(res){
             product_clear_form_data(res)
-            flash_message("Wishlist has been Deleted!")
+            $("#product_model_id").val("");
+            flash_message("Product has been Deleted!")
         });
 
         ajax.fail(function(res){
