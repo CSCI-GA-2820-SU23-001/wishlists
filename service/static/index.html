@@ -31,6 +31,7 @@
       text-align: center;
       margin-right: 40px;
     }
+
     /* Style the tab */
     .tab {
       overflow: hidden;
@@ -157,6 +158,24 @@
       </div>
     </div> <!-- form horizontal -->
 
+    <!-- PRODUCT LISTS-->
+  <div class="form-group">  
+    <table class="table table-bordered" id="product_list_result">
+      <thead>
+        <tr>
+          <th scope="col">Project ID</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Product Price</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="product_list_body">
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Append Product List</button>  
+  </div>
     <!-- Wishlist Search Results -->
     <table class="table table-striped" id="wishlist_search_results">
         <thead>
