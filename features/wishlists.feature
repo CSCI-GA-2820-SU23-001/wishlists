@@ -69,3 +69,24 @@ Feature: The wishlist service back-end
         When I paste the "Wishlist Id" field
         And I press the "Delete_Wishlist" button
         Then I should see the message "Wishlist has been Deleted!"
+
+    Scenario: Update a Wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_1"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        And I should see "wishlist_1" in the "Wishlist Name" field
+        When I change the "Wishlist Name" to "wishlist_first"
+        And I press the "Update_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Wishlist" button
+        And I paste the "Wishlist Id" field
+        And I press the "Retrieve_Wishlist" button
+        Then I should see the message "Success"
+        And I should see "wishlist_first" in the "Wishlist Name" field
+        When I press the "Clear_Wishlist" button
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        And I should see "wishlist_first" in the wishlist results
+        And I should not see "wishlist_1" in the wishlist results
