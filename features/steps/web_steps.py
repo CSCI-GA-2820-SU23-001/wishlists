@@ -116,3 +116,11 @@ def step_impl(context, name):
 def step_impl(context, name):
     element = context.driver.find_element(By.ID, 'wishlist_search_results')
     assert(name not in element.text)
+
+@when('I change the "{element_name}" to "{text_string}"')
+def step_impl(context, element_name, text_string):
+    """ Changes the value of a specified input field """
+    element_id = element_name.lower().replace(' ', '_')
+    element = context.driver.find_element(By.ID, element_id)
+    element.clear()
+    element.send_keys(text_string)
