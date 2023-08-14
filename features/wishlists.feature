@@ -5,12 +5,12 @@ Feature: The wishlist service back-end
 
     Background:
         Given the following wishlists
-            | user_id | wishlist_name |
-            | 1       | wishlist_1    |
-            | 1       | wishlist_2    |
-            | 2       | wishlist_3    |
-            | 3       | wishlist_4    |
-            | 4       | wishlist_5    |
+            | user_id | wishlist_name | archived |
+            | 1       | wishlist_1    | false    |
+            | 1       | wishlist_2    | false    |
+            | 2       | wishlist_3    | true     |
+            | 3       | wishlist_4    | false    |
+            | 4       | wishlist_5    | false    |
 
     Scenario: The server is running
         When I visit the "Home Page"
@@ -21,6 +21,7 @@ Feature: The wishlist service back-end
         When I visit the "Home Page"
         And I set the "Wishlist User ID" to "1234"
         And I set the "Wishlist Name" to "NYE Wishlist"
+        And I select "true" from the "Wishlist Archived"
         And I press the "Create_Wishlist" button
         Then I should see the message "Success"
         When I copy the "Wishlist Id" field
@@ -28,11 +29,13 @@ Feature: The wishlist service back-end
         Then the "Wishlist Id" field should be empty
         And the "Wishlist User ID" field should be empty
         And the "Wishlist Name" field should be empty
+        And "False" should be selected in the "Wishlist Archived" field
         When I paste the "Wishlist Id" field
         And I press the "Retrieve_Wishlist" button
         Then I should see the message "Success"
         And I should see "1234" in the "Wishlist User ID" field
         And I should see "NYE Wishlist" in the "Wishlist Name" field
+        And "True" should be selected in the "Wishlist Archived" field
 
     Scenario: Get a Wishlist by Name
         When I visit the "Home Page"
