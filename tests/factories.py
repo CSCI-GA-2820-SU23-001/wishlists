@@ -16,6 +16,7 @@
 Test Factory to make fake objects for testing
 """
 import factory
+from factory.fuzzy import FuzzyChoice
 from service.models import Wishlist, Product
 
 
@@ -29,6 +30,7 @@ class WishlistFactory(factory.Factory):
     id = factory.Sequence(lambda n: n)
     user_id = factory.Faker("random_number")
     wishlist_name = factory.Faker("word")
+    archived = FuzzyChoice(choices=[True, False])
     # the many side of relationships can be a little wonky in factory boy:
     # https://factoryboy.readthedocs.io/en/latest/recipes.html#simple-many-to-many-relationship
 

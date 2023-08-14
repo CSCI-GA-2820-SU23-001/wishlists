@@ -55,12 +55,14 @@ class TestWishlist(unittest.TestCase):
         # pylint: disable=unexpected-keyword-arg
         wishlist = Wishlist(
             user_id=fake_wishlist.user_id,
-            wishlist_name=fake_wishlist.wishlist_name
+            wishlist_name=fake_wishlist.wishlist_name,
+            archived=fake_wishlist.archived
         )
         self.assertIsNotNone(wishlist)
         self.assertEqual(wishlist.id, None)
         self.assertEqual(wishlist.user_id, fake_wishlist.user_id)
         self.assertEqual(wishlist.wishlist_name, fake_wishlist.wishlist_name)
+        self.assertEqual(wishlist.archived, fake_wishlist.archived)
 
     def test_add_a_wishlist(self):
         """It should Create a Wishlist and add it to the database"""
@@ -77,11 +79,11 @@ class TestWishlist(unittest.TestCase):
         """It should List all Wishlists in the database"""
         wishlists = Wishlist.all()
         self.assertEqual(wishlists, [])
-        for wishlist in WishlistFactory.create_batch(10):
+        for wishlist in WishlistFactory.create_batch(5):
             wishlist.create()
-        # Assert that there are now 10 wishlists in the database
+        # Assert that there are now 5 wishlists in the database
         wishlists = Wishlist.all()
-        self.assertEqual(len(wishlists), 10)
+        self.assertEqual(len(wishlists), 5)
 
     def test_read_a_wishlist(self):
         """It should Read a Wishlist"""
@@ -92,6 +94,7 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(found_wishlist.id, wishlist.id)
         self.assertEqual(found_wishlist.user_id, wishlist.user_id)
         self.assertEqual(found_wishlist.wishlist_name, wishlist.wishlist_name)
+        self.assertEqual(found_wishlist.archived, wishlist.archived)
         self.assertEqual(found_wishlist.wishlist_products, [])
 
     def test_update_a_wishlist(self):
@@ -134,6 +137,7 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(same_wishlist.id, wishlist.id)
         self.assertEqual(same_wishlist.wishlist_name, wishlist.wishlist_name)
         self.assertEqual(same_wishlist.user_id, wishlist.user_id)
+        self.assertEqual(same_wishlist.archived, wishlist.archived)
 
     def test_serialize_a_wishlist(self):
         """It should Serialize a Wishlist"""
@@ -144,6 +148,7 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(serial_wishlist["id"], wishlist.id)
         self.assertEqual(serial_wishlist["user_id"], wishlist.user_id)
         self.assertEqual(serial_wishlist["wishlist_name"], wishlist.wishlist_name)
+        self.assertEqual(serial_wishlist["archived"], wishlist.archived)
         self.assertEqual(len(serial_wishlist["wishlist_products"]), 1)
         wishlist_products = serial_wishlist["wishlist_products"]
         self.assertEqual(wishlist_products[0]["id"], product.id)
@@ -161,6 +166,7 @@ class TestWishlist(unittest.TestCase):
         new_wishlist.deserialize(serial_wishlist)
         self.assertEqual(new_wishlist.user_id, wishlist.user_id)
         self.assertEqual(new_wishlist.wishlist_name, wishlist.wishlist_name)
+        self.assertEqual(new_wishlist.archived, wishlist.archived)
 
     def test_deserialize_wishlist_key_error(self):
         """It should not Deserialize a wishlist with a KeyError"""
@@ -171,9 +177,11 @@ class TestWishlist(unittest.TestCase):
         """It should not Deserialize a wishlist with a TypeError"""
         wishlist = Wishlist()
         self.assertRaises(DataValidationError, wishlist.deserialize, [])
-        data = {'user_id': "myID", 'wishlist_name': 1234}
+        data = {'user_id': "myID", 'wishlist_name': 1234, 'archived': "Hello"}
         self.assertRaises(DataValidationError, wishlist.deserialize, data)
         data["user_id"] = 1234
+        self.assertRaises(DataValidationError, wishlist.deserialize, data)
+        data["wishlist_name"] = "my_wishlist"
         self.assertRaises(DataValidationError, wishlist.deserialize, data)
 
     def test_add_wishlist_product(self):

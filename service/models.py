@@ -148,6 +148,7 @@ class Wishlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     wishlist_name = db.Column(db.String(63), nullable=False, unique=True)
+    archived = db.Column(db.Boolean(), nullable=False, default=False)
     wishlist_products = db.relationship("Product", backref="wishlist", passive_deletes=True)
 
     def __repr__(self):
@@ -181,6 +182,7 @@ class Wishlist(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "wishlist_name": self.wishlist_name,
+            "archived": self.archived,
             "wishlist_products": [],
         }
         for product in self.wishlist_products:
@@ -201,6 +203,9 @@ class Wishlist(db.Model):
             self.wishlist_name = data["wishlist_name"]
             if not isinstance(self.wishlist_name, str):
                 raise TypeError("name must be a string")
+            self.archived = data["archived"]
+            if not isinstance(self.archived, bool):
+                raise TypeError("archived must be boolean")
             product_list = data.get("wishlist_products")
             if product_list is not None:
                 for json_product in product_list:

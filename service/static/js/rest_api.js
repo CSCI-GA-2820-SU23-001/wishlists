@@ -9,6 +9,7 @@ $(function () {
         $("#wishlist_id").val(res.id);
         $("#wishlist_user_id").val(res.user_id);
         $("#wishlist_name").val(res.wishlist_name);
+        $('#wishlist_archived').val(String(res.archived));
         $("#product_list_result").empty();
         product_list_rowIdx = 0;
         var products = res.wishlist_products;
@@ -31,6 +32,7 @@ $(function () {
         $("#wishlist_id").val("");
         $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
+        $('#wishlist_archived').val("false");
         $("#product_list_result").empty();
         wishlist_clear_search_result();
     }
@@ -57,6 +59,7 @@ $(function () {
         table += '<th class="col-md-1">Wishlist ID</th>'
         table += '<th class="col-md-1">User ID</th>'
         table += '<th class="col-md-2">Wishlist Name</th>'
+        table += '<th class="col-md-1">Archived</th>'
         table += '<th class="col-md-4">Items</th>'
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
@@ -101,6 +104,7 @@ $(function () {
         wishlist_clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        let archived = document.querySelector("#wishlist_archived").value == "true" ? true : false;
 
         let product_list = [];
         let product_list_result = document.getElementById("product_list_result");
@@ -117,6 +121,7 @@ $(function () {
         let data = {
             "wishlist_name": wishlist_name,
             "user_id": user_id,
+            "archived": archived,
             "wishlist_products": product_list
         };
 
@@ -150,6 +155,7 @@ $(function () {
         let wishlist_id = $("#wishlist_id").val();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        let archived = document.querySelector("#wishlist_archived").value == "true" ? true : false;
         
         let product_list = [];
         let product_list_result = document.getElementById("product_list_result");
@@ -170,6 +176,7 @@ $(function () {
             "wishlist_id": wishlist_id,
             "wishlist_name": wishlist_name,
             "user_id": user_id,
+            "archived": archived,
             "wishlist_products": product_list
         };
 
@@ -240,7 +247,6 @@ $(function () {
         })
         
         ajax.done(function (res){
-
             wishlist_clear_form_data()
             flash_message("Wishlist has been Deleted!")
         });
@@ -249,7 +255,59 @@ $(function () {
             flash_message("Server error!")
         });
     });
+
+    // ****************************************
+    // Archive a Wishlist
+    // ****************************************
+
+    $("#archive_wishlist_btn").click(function () {
+
+        let wishlist_id = $("#wishlist_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/wishlists/${wishlist_id}/archive`
+        })
+        
+        ajax.done(function (res){
+            wishlist_update_form_data(res)
+            flash_message("Wishlist has been Archived!")
+        });
+
+        ajax.fail(function (res){
+            wishlist_clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+    });
     
+    // ****************************************
+    // Unarchive a Wishlist
+    // ****************************************
+
+    $("#unarchive_wishlist_btn").click(function () {
+
+        let wishlist_id = $("#wishlist_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/wishlists/${wishlist_id}/unarchive`
+        })
+        
+        ajax.done(function (res){
+            wishlist_update_form_data(res)
+            flash_message("Wishlist has been Unarchived!")
+        });
+
+        ajax.fail(function (res){
+            wishlist_clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+    });
+
     // ************************************************************************************
     // PRODUCTS
     // ************************************************************************************
@@ -473,12 +531,13 @@ $(function () {
             table += '<th class="col-md-1">Wishlist ID</th>'
             table += '<th class="col-md-1">User ID</th>'
             table += '<th class="col-md-2">Wishlist Name</th>'
+            table += '<th class="col-md-1">Archived</th>'
             table += '<th class="col-md-4">Items</th>'
             table += '</tr></thead><tbody>'
             let firstWishlist = "";
             for (let i = 0; i < res.length; i++) {
                 let wishlist = res[i];
-                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td>`
+                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td><td>${wishlist.archived}</td>`
                 table += `<td><table>`
 
                 let wishlist_products = wishlist.wishlist_products

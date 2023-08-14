@@ -183,6 +183,60 @@ def delete_wishlist(wishlist_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 
+######################################################################
+# ARCHIVE ACTION ON A WISHLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/archive", methods=["PUT"])
+def archive_wishlist(wishlist_id):
+    """
+    Archive a wishlist
+
+    This action route will archive the given Wishlist
+    """
+    app.logger.info("Request to archive wishlist with id: %s", wishlist_id)
+
+    # Retrieve the wishlist to be archived, and abort if not found
+    wishlist = Wishlist.find(wishlist_id)
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' could not be found."
+        )
+
+    # Archive the fetched wishlist
+    wishlist.archived = True
+    wishlist.update()
+
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
+# UNARCHIVE ACTION ON A WISHLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/unarchive", methods=["PUT"])
+def unarchive_wishlist(wishlist_id):
+    """
+    Unarchive a wishlist
+
+    This action route will unarchive the given Wishlist
+    """
+    app.logger.info("Request to unarchive wishlist with id: %s", wishlist_id)
+
+    # Retrieve the wishlist to be unarchived, and abort if not found
+    wishlist = Wishlist.find(wishlist_id)
+    if not wishlist:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Wishlist with id '{wishlist_id}' could not be found."
+        )
+
+    # Archive the fetched wishlist
+    wishlist.archived = False
+    wishlist.update()
+
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
+
+
 # ---------------------------------------------------------------------
 #                P R O D U C T   M E T H O D S
 # ---------------------------------------------------------------------
@@ -326,12 +380,15 @@ def remove_product(wishlist_id, product_id):
 ######################################################################
 # K U B E R N E T E S   H E A L T H   C H E C K
 ######################################################################
+
+
 @app.route('/health')
 def check_kubernetes():
     """
     Health check for kubernetes
     """
     return make_response(jsonify(status=200, message="Healthy"), status.HTTP_200_OK)
+
 
 ######################################################################
 # U T I L I T Y   F U N C T I O N S

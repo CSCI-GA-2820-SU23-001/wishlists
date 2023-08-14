@@ -46,7 +46,8 @@ def step_impl(context):
     for row in context.table:
         payload = {
             "user_id": int(row['user_id']),
-            "wishlist_name": row['wishlist_name']
+            "wishlist_name": row['wishlist_name'],
+            "archived": True if row['archived'] == "true" else False
         }
         context.resp = requests.post(rest_endpoint, json=payload)
         assert(context.resp.status_code == HTTP_201_CREATED)
