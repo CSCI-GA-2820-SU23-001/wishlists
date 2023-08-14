@@ -59,6 +59,7 @@ $(function () {
         table += '<th class="col-md-1">Wishlist ID</th>'
         table += '<th class="col-md-1">User ID</th>'
         table += '<th class="col-md-2">Wishlist Name</th>'
+        table += '<th class="col-md-1">Archived</th>'
         table += '<th class="col-md-4">Items</th>'
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
@@ -530,12 +531,13 @@ $(function () {
             table += '<th class="col-md-1">Wishlist ID</th>'
             table += '<th class="col-md-1">User ID</th>'
             table += '<th class="col-md-2">Wishlist Name</th>'
+            table += '<th class="col-md-1">Archived</th>'
             table += '<th class="col-md-4">Items</th>'
             table += '</tr></thead><tbody>'
             let firstWishlist = "";
             for (let i = 0; i < res.length; i++) {
                 let wishlist = res[i];
-                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td>`
+                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td><td>${wishlist.archived}</td>`
                 table += `<td><table>`
 
                 let wishlist_products = wishlist.wishlist_products
