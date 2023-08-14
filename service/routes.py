@@ -151,10 +151,11 @@ def update_wishlist(wishlist_id):
     # Checking for conflicts when renaming
     update_wl = Wishlist.find_by_name(body['wishlist_name'])
     if len(update_wl) > 0:
-        abort(
-            status.HTTP_409_CONFLICT,
-            f"Wishlist with '{body['wishlist_name']}' already exists."
-        )
+        if update_wl[0].id != wishlist.id:
+            abort(
+                status.HTTP_409_CONFLICT,
+                f"Wishlist with '{body['wishlist_name']}' already exists."
+            )
 
     wishlist.deserialize(body)
     wishlist.update()
