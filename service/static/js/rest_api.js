@@ -472,10 +472,10 @@ $(function () {
                 for(let j = 0; j < wishlist_products.length; j++) {
                     let product = wishlist_products[j]
                     table += `<tr>
-                                <td>Item ID: ${product.id}&emsp;</td>
-                                <td>Product ID: ${product.product_id}&emsp;</td>
-                                <td>Product Name: ${product.product_name}&emsp;</td>
-                                <td>Product Price: ${product.product_price}&emsp;</td>
+                                <td><b>Item ID:</b> ${product.id}&emsp;</td>
+                                <td><b>Product ID:</b> ${product.product_id}&emsp;</td>
+                                <td><b>Product Name:</b> ${product.product_name}&emsp;</td>
+                                <td><b>Product Price:</b> ${product.product_price}&emsp;</td>
                              </tr>`;
                 }
                 
