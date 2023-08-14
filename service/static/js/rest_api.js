@@ -82,9 +82,9 @@ $(function () {
     function append_existed_product_list(product_id, product_name, product_price) {
         $("#product_list_result").append(
         `<tr id="product_list_row_${++product_list_rowIdx}">
-            <td> <input type="number" name="text" class="form-control" value=${product_id} readonly></td>
-            <td> <input type="text" name="text" class="form-control" value=${product_name} readonly></td>
-            <td> <input type="number" name="text" class="form-control" value=${product_price} readonly></td>
+            <td> <input type="number" name="text" class="form-control" value=${product_id} readonly=true></td>
+            <td> <input type="text" name="text" class="form-control" value=${product_name} readonly=true></td>
+            <td> <input type="number" name="text" class="form-control" value=${product_price} readonly=true></td>
             <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
         </tr>`);
     }
@@ -150,11 +150,27 @@ $(function () {
         let wishlist_id = $("#wishlist_id").val();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        
+        let product_list = [];
+        let product_list_result = document.getElementById("product_list_result");
+        for(let i = 0, row; row = product_list_result.rows[i]; i++) {
+            if(row.cells[1].children[0].getAttribute('readonly')) {
+                continue;
+            }
+            let product = {
+                    "wishlist_id": wishlist_id,
+                    "product_id": parseInt(row.cells[0].children[0].value),
+                    "product_name": row.cells[1].children[0].value,
+                    "product_price": parseFloat(row.cells[2].children[0].value)
+                };
+            product_list.push(product);
+        }
 
         let data = {
             "wishlist_id": wishlist_id,
             "wishlist_name": wishlist_name,
-            "user_id": user_id
+            "user_id": user_id,
+            "wishlist_products": product_list
         };
 
         $("#flash_message").empty();
@@ -472,10 +488,10 @@ $(function () {
                 for(let j = 0; j < wishlist_products.length; j++) {
                     let product = wishlist_products[j]
                     table += `<tr>
-                                <td>Item ID: ${product.id}&emsp;</td>
-                                <td>Product ID: ${product.product_id}&emsp;</td>
-                                <td>Product Name: ${product.product_name}&emsp;</td>
-                                <td>Product Price: ${product.product_price}&emsp;</td>
+                                <td><b>Item ID:</b> ${product.id}&emsp;</td>
+                                <td><b>Product ID:</b> ${product.product_id}&emsp;</td>
+                                <td><b>Product Name:</b> ${product.product_name}&emsp;</td>
+                                <td><b>Product Price:</b> ${product.product_price}&emsp;</td>
                              </tr>`;
                 }
                 
