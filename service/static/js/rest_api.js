@@ -9,6 +9,7 @@ $(function () {
         $("#wishlist_id").val(res.id);
         $("#wishlist_user_id").val(res.user_id);
         $("#wishlist_name").val(res.wishlist_name);
+        $('#wishlist_archived').val(String(res.archived));
     }
 
     function product_update_form_data(res) {
@@ -24,6 +25,7 @@ $(function () {
         $("#wishlist_id").val("");
         $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
+        $('#wishlist_archived').val("false");
         wishlist_clear_search_result();
     }
 
@@ -104,10 +106,12 @@ $(function () {
         wishlist_clear_search_result();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        let archived = document.querySelector("#wishlist_archived").value == "true" ? true : false;
 
         let data = {
             "wishlist_name": wishlist_name,
-            "user_id": user_id
+            "user_id": user_id,
+            "archived": archived
         };
 
         $("#flash_message").empty();
@@ -140,11 +144,13 @@ $(function () {
         let wishlist_id = $("#wishlist_id").val();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        let archived = document.querySelector("#wishlist_archived").value == "true" ? true : false;
 
         let data = {
             "wishlist_id": wishlist_id,
             "wishlist_name": wishlist_name,
-            "user_id": user_id
+            "user_id": user_id,
+            "archived": archived
         };
 
         $("#flash_message").empty();
@@ -215,7 +221,6 @@ $(function () {
         })
         
         ajax.done(function (res){
-
             wishlist_clear_form_data()
             flash_message("Wishlist has been Deleted!")
         });
@@ -224,7 +229,59 @@ $(function () {
             flash_message("Server error!")
         });
     });
+
+    // ****************************************
+    // Archive a Wishlist
+    // ****************************************
+
+    $("#archive_wishlist_btn").click(function () {
+
+        let wishlist_id = $("#wishlist_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/wishlists/${wishlist_id}/archive`
+        })
+        
+        ajax.done(function (res){
+            wishlist_update_form_data(res)
+            flash_message("Wishlist has been Archived!")
+        });
+
+        ajax.fail(function (res){
+            wishlist_clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+    });
     
+    // ****************************************
+    // Unarchive a Wishlist
+    // ****************************************
+
+    $("#unarchive_wishlist_btn").click(function () {
+
+        let wishlist_id = $("#wishlist_id").val();
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/wishlists/${wishlist_id}/unarchive`
+        })
+        
+        ajax.done(function (res){
+            wishlist_update_form_data(res)
+            flash_message("Wishlist has been Unarchived!")
+        });
+
+        ajax.fail(function (res){
+            wishlist_clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+    });
+
     // ************************************************************************************
     // PRODUCTS
     // ************************************************************************************

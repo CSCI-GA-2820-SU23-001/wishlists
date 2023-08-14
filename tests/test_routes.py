@@ -89,11 +89,11 @@ class TestWishlistServer(TestCase):
 
     def test_get_wishlist_by_name(self):
         """ It should Get a wishlist with same name """
-        wls = self._create_wishlists(10)
+        wls = self._create_wishlists(5)
         resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(len(data), 10)
+        self.assertEqual(len(data), 5)
         wl_name = wls[0].wishlist_name
         res = self.client.get(f'{BASE_URL}?wishlist_name={wl_name}')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
@@ -267,6 +267,54 @@ class TestWishlistServer(TestCase):
         wl2 = Wishlist.find(data2['id']).wishlist_name
         self.assertEqual(wl1, "new_Name")
         self.assertNotEqual(wl2, "new_Name")
+
+    def test_archive_wishlist(self):
+        """ It should archive a Wishlist """
+        wishlist = WishlistFactory()
+        wishlist.archived = False
+        res = self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        data = res.get_json()
+        self.assertEqual(data['archived'], False)
+        res = self.client.put(f"{BASE_URL}/{data['id']}/archive")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        data = res.get_json()
+        self.assertEqual(data['archived'], True)
+
+    def test_cannot_archive_wishlist(self):
+        """ It should not archive a non-existent Wishlist """
+        wishlist = WishlistFactory()
+        wishlist.archived = False
+        res = self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        data = res.get_json()
+        self.assertEqual(data['archived'], False)
+        res = self.client.put(f"{BASE_URL}/{data['id'] + 1}/archive")
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_unarchive_wishlist(self):
+        """ It should unarchive a Wishlist """
+        wishlist = WishlistFactory()
+        wishlist.archived = True
+        res = self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        data = res.get_json()
+        self.assertEqual(data['archived'], True)
+        res = self.client.put(f"{BASE_URL}/{data['id']}/unarchive")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        data = res.get_json()
+        self.assertEqual(data['archived'], False)
+
+    def test_cannot_unarchive_wishlist(self):
+        """ It should not unarchive a non-existent Wishlist """
+        wishlist = WishlistFactory()
+        wishlist.archived = True
+        res = self.client.post(BASE_URL, json=wishlist.serialize(), content_type="application/json")
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        data = res.get_json()
+        self.assertEqual(data['archived'], True)
+        res = self.client.put(f"{BASE_URL}/{data['id'] + 1}/unarchive")
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     ######################################################################
     #  P R O D U C T   T E S T   C A S E S

@@ -123,6 +123,8 @@
           </div>
           <div class="col-sm-4">
             <button type="submit" class="btn btn-primary rounded-btn" id="retrieve_wishlist_btn">Retrieve</button>
+            <button type="submit" class="btn btn-secondary rounded-btn" id="archive_wishlist_btn">Archive</button>
+            <button type="submit" class="btn btn-secondary rounded-btn" id="unarchive_wishlist_btn">Unarchive</button>
             <button type="submit" class="btn btn-danger rounded-btn" id="delete_wishlist_btn">Delete</button>
           </div>
         </div>
@@ -143,6 +145,17 @@
           <label class="control-label col-sm-2" for="wishlist_name">Wishlist Name:</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" id="wishlist_name" placeholder="Enter name for Wishlist">
+          </div>
+        </div>
+
+        <!-- Wishlist Status -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="wishlist_name">Wishlist Archived:</label>
+          <div class="col-sm-2">
+            <select class="form-control" id="wishlist_archived">
+              <option value="false">False</option>
+              <option value="true">True</option>
+            </select>
           </div>
         </div>
 
