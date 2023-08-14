@@ -9,6 +9,13 @@ $(function () {
         $("#wishlist_id").val(res.id);
         $("#wishlist_user_id").val(res.user_id);
         $("#wishlist_name").val(res.wishlist_name);
+        $("#product_list_result").empty();
+        product_list_rowIdx = 0;
+        var products = res.wishlist_products;
+
+        for(let i = 0; i < products.length; i++) {
+            append_existed_product_list(products[i].product_id, products[i].product_name, products[i].product_price);
+        }
     }
 
     function product_update_form_data(res) {
@@ -24,6 +31,7 @@ $(function () {
         $("#wishlist_id").val("");
         $("#wishlist_user_id").val("");
         $("#wishlist_name").val("");
+        $("#product_list_result").empty();
         wishlist_clear_search_result();
     }
 
@@ -44,12 +52,12 @@ $(function () {
 
     function wishlist_clear_search_result() {
         $("#wishlist_search_results").empty();
-        $("#product_list_body").empty();
         let table = '<table class="table table-striped" cellpadding="10">'
         table += '<thead><tr>'
         table += '<th class="col-md-1">Wishlist ID</th>'
         table += '<th class="col-md-1">User ID</th>'
-        table += '<th class="col-md-4">Wishlist Name</th>'
+        table += '<th class="col-md-2">Wishlist Name</th>'
+        table += '<th class="col-md-4">Items</th>'
         table += '</tr></thead><tbody>'
         table += '</tbody></table>';
         $("#wishlist_search_results").append(table);
@@ -72,24 +80,13 @@ $(function () {
     var product_list_rowIdx = 0;
 
     function append_existed_product_list(product_id, product_name, product_price) {
-        $("#product_list_body").append(
+        $("#product_list_result").append(
         `<tr id="product_list_row_${++product_list_rowIdx}">
-            <td> <input type="text" name="text" class="form-control"  value=${product_id} readonly></td>
-            <td> <input type="text" name="text" class="form-control"  value=${product_name} readonly></td>
-            <td> <input type="text" name="text" class="form-control"  value=${product_price} readonly></td>
+            <td> <input type="number" name="text" class="form-control" value=${product_id} readonly=true></td>
+            <td> <input type="text" name="text" class="form-control" value=${product_name} readonly=true></td>
+            <td> <input type="number" name="text" class="form-control" value=${product_price} readonly=true></td>
             <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
         </tr>`);
-    }
-
-
-    function wishlist_update_product_list_result(res) {
-        $("#product_list_body").empty();
-        product_list_rowIdx = 0;
-        var products = res.wishlist_products;
-
-        for(let i = 0; i < products.length; i++) {
-            append_existed_product_list(products[i].product_id, products[i].product_name, products[i].product_price);
-        }
     }
 
     // ************************************************************************************
@@ -105,9 +102,22 @@ $(function () {
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
 
+        let product_list = [];
+        let product_list_result = document.getElementById("product_list_result");
+        for(let i = 0, row; row = product_list_result.rows[i]; i++) {
+            let product = {
+                "wishlist_id": "null",
+                "product_id": parseInt(row.cells[0].children[0].value),
+                "product_name": row.cells[1].children[0].value,
+                "product_price": parseFloat(row.cells[2].children[0].value)
+            };
+            product_list.push(product);
+        }
+
         let data = {
             "wishlist_name": wishlist_name,
-            "user_id": user_id
+            "user_id": user_id,
+            "wishlist_products": product_list
         };
 
         $("#flash_message").empty();
@@ -140,11 +150,27 @@ $(function () {
         let wishlist_id = $("#wishlist_id").val();
         let wishlist_name = $("#wishlist_name").val();
         let user_id = parseInt($("#wishlist_user_id").val());
+        
+        let product_list = [];
+        let product_list_result = document.getElementById("product_list_result");
+        for(let i = 0, row; row = product_list_result.rows[i]; i++) {
+            if(row.cells[1].children[0].getAttribute('readonly')) {
+                continue;
+            }
+            let product = {
+                    "wishlist_id": wishlist_id,
+                    "product_id": parseInt(row.cells[0].children[0].value),
+                    "product_name": row.cells[1].children[0].value,
+                    "product_price": parseFloat(row.cells[2].children[0].value)
+                };
+            product_list.push(product);
+        }
 
         let data = {
             "wishlist_id": wishlist_id,
             "wishlist_name": wishlist_name,
-            "user_id": user_id
+            "user_id": user_id,
+            "wishlist_products": product_list
         };
 
         $("#flash_message").empty();
@@ -186,7 +212,6 @@ $(function () {
         ajax.done(function (res) {
             //alert(res.toSource())
             wishlist_update_form_data(res)
-            wishlist_update_product_list_result(res)
             flash_message("Success")
         });
 
@@ -438,7 +463,7 @@ $(function () {
             contentType: "application/json",
             data: ''
         })
-        //TODO: search result won't clear out
+
         ajax.done(function (res) {
             //alert(res.toSource())
             $("#wishlist_search_results").empty();
@@ -447,12 +472,30 @@ $(function () {
             table += '<thead><tr>'
             table += '<th class="col-md-1">Wishlist ID</th>'
             table += '<th class="col-md-1">User ID</th>'
-            table += '<th class="col-md-4">Wishlist Name</th>'
+            table += '<th class="col-md-2">Wishlist Name</th>'
+            table += '<th class="col-md-4">Items</th>'
             table += '</tr></thead><tbody>'
             let firstWishlist = "";
             for (let i = 0; i < res.length; i++) {
                 let wishlist = res[i];
-                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td></tr>`;
+                table += `<tr id="row_${i}"><td>${wishlist.id}</td><td>${wishlist.user_id}</td><td>${wishlist.wishlist_name}</td>`
+                table += `<td><table>`
+
+                let wishlist_products = wishlist.wishlist_products
+                if(wishlist_products.length == 0) {
+                    table += `<tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr>`
+                }
+                for(let j = 0; j < wishlist_products.length; j++) {
+                    let product = wishlist_products[j]
+                    table += `<tr>
+                                <td><b>Item ID:</b> ${product.id}&emsp;</td>
+                                <td><b>Product ID:</b> ${product.product_id}&emsp;</td>
+                                <td><b>Product Name:</b> ${product.product_name}&emsp;</td>
+                                <td><b>Product Price:</b> ${product.product_price}&emsp;</td>
+                             </tr>`;
+                }
+                
+                table += `</table></td></tr>`
                 if (i == 0) {
                     firstWishlist = wishlist;
                 }
@@ -460,7 +503,6 @@ $(function () {
             table += '</tbody></table>';
 
             $("#wishlist_search_results").append(table);
-
 
             // copy the first result to the form
             if (firstWishlist != "") {
@@ -556,16 +598,16 @@ $(function () {
     });
 
     $("#append_product_list_btn").click(function () {
-        $("#product_list_body").append(
+        $("#product_list_result").append(
         `<tr id="product_list_row_${++product_list_rowIdx}">
-            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
-            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
-            <td> <input type="text" name="text" class="form-control"  placeholder="Optional"></td>
+            <td> <input type="number" name="text" class="form-control"  placeholder="Product ID"></td>
+            <td> <input type="text" name="text" class="form-control"  placeholder="Product Name"></td>
+            <td> <input type="number" name="text" class="form-control"  placeholder="Product Price"></td>
             <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
         </tr>`);
     });
 
-    $('#product_list_body').on('click', '.remove', function () {
+    $('#product_list_result').on('click', '.remove', function () {
         var child = $(this).closest('tr').nextAll();
     
         // Iterating across all the rows 

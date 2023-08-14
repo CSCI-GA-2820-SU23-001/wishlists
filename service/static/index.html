@@ -107,13 +107,13 @@
   </div>
 
   <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="defaultOpen">Wishlist</button>
-    <button class="tablinks" onclick="openCity(event, 'product_form_data')">Product</button>
+    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="defaultOpen">Wishlists</button>
+    <button class="tablinks" onclick="openCity(event, 'product_form_data')">Items</button>
   </div>
 
-  <!-- WHISHLIST FORM -->
+  <!-- WISHLIST FORM -->
   <div class="tabcontent" id="wishlist_form_data">
-    <h3>Create, Retrieve, Update, and Delete a Wishlists:</h3>
+    <h3>Create, Retrieve, Update, and Delete Wishlists:</h3>
     <div class="transparent-bg">
       <div class="form-horizontal">
         <div class="form-group">
@@ -146,6 +146,16 @@
           </div>
         </div>
 
+        <!-- Product List -->
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="wishlist_product_list">Products [optional]:</label>
+          <div class="col-sm-10">
+            <table class="table table-bordered" id="product_list_result">
+            </table>
+            <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Include Product</button>
+          </div>  
+        </div>
+
         <!-- SUBMIT BUTTONS -->
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
@@ -158,31 +168,14 @@
       </div>
     </div> <!-- form horizontal -->
 
-    <!-- PRODUCT LISTS-->
-  <div class="form-group">  
-    <table class="table table-bordered" id="product_list_result">
-      <thead>
-        <tr>
-          <th scope="col">Project ID</th>
-          <th scope="col">Product Name</th>
-          <th scope="col">Product Price</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="product_list_body">
-        <tr>
-        </tr>
-      </tbody>
-    </table>
-    <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Append Product List</button>  
-  </div>
     <!-- Wishlist Search Results -->
     <table class="table table-striped" id="wishlist_search_results">
         <thead>
           <tr>
             <th class="col-md-1">Wishlist ID</th>
             <th class="col-md-1">User ID</th>
-            <th class="col-md-4">Wishlist Name</th>
+            <th class="col-md-2">Wishlist Name</th>
+            <th class="col-md-4">Items</th>
           </tr>
         </thead>
     </table>
@@ -191,7 +184,7 @@
 
   <!-- PRODUCT FORM -->
   <div class="tabcontent" id="product_form_data">
-    <h3>Create, Retrieve, Update, and Delete a Products:</h3>
+    <h3>Create, Retrieve, Update, and Delete Items:</h3>
     <div class="transparent-bg">
       <div class="form-horizontal"> 
         <div class="form-group">
@@ -271,7 +264,7 @@
 
   <footer>
     <br><br>
-    <p>&copy; NYU DevOps Company Wishlist 2023 summer</p>
+    <p>&copy; NYU DevOps Company Wishlist 2023 Summer</p>
   </footer>
 
   </div> <!-- container -->
