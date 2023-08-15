@@ -35,7 +35,7 @@ def step_impl(context):
     """ Delete all Wishlists and load new ones """
 
     # List all of the wishlists and delete them one by one
-    rest_endpoint = f"{context.base_url}/wishlists"
+    rest_endpoint = f"{context.base_url}/api/wishlists"
     context.resp = requests.get(rest_endpoint)
     assert(context.resp.status_code == HTTP_200_OK)
     for wishlist in context.resp.json():
@@ -54,7 +54,7 @@ def step_impl(context):
 
 @given('the following products')
 def step_impl(context):
-    rest_endpoint = f"{context.base_url}/wishlists"
+    rest_endpoint = f"{context.base_url}/api/wishlists"
 
     for row in context.table:
         resp = requests.get(rest_endpoint + "?name=" + row["wishlist_name"])
