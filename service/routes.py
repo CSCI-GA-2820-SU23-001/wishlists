@@ -48,10 +48,9 @@ def list_all_wishlists():
     if wishlist_name:
         wishlists = Wishlist.find_by_name(wishlist_name)
         if len(wishlists) == 0:
-            abort(
-                status.HTTP_404_NOT_FOUND,
-                f"wishlist with '{wishlist_name}' doesn't exist.")
-        wishlists = [wishlists[0].serialize()]
+            wishlists = []
+        else:
+            wishlists = [wishlists[0].serialize()]
     else:
         # Return as an array of JSON
         wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
@@ -203,22 +202,14 @@ def list_products(wishlist_id):
     # See if the wishlist exists, and abort if it does not
     wishlist = Wishlist.find(wishlist_id)
     if not wishlist:
-        abort(
-            status.HTTP_404_NOT_FOUND,
-            f"Wishlist with id '{wishlist_id}' cannot be found."
-        )
-
-    res = [product.serialize() for product in wishlist.wishlist_products]
+        res = []
+    else:
+        res = [product.serialize() for product in wishlist.wishlist_products]
 
     # Filtering, if needed
     product_id = request.args.get("product_id")
     if product_id:
         res = [product for product in res if product["product_id"] == int(product_id)]
-        if len(res) == 0:
-            abort(
-                status.HTTP_404_NOT_FOUND,
-                f"Product with id '{product_id}' cannot be found."
-            )
 
     return make_response(jsonify(res), status.HTTP_200_OK)
 
