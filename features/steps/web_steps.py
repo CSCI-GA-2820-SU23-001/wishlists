@@ -153,3 +153,9 @@ def step_impl(context, form_name):
     WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
+
+@step('I should see "{text}" in the "{field_name}" option')
+def step_impl(context, text, field_name):
+    select = Select(context.driver.find_element(By.ID, field_name))
+    selected_option = select.first_selected_option
+    assert selected_option.text == text, f'Expected to see {text} in the {field_name} field, but saw {selected_option.text}'
