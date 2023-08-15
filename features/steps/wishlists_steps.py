@@ -51,3 +51,23 @@ def step_impl(context):
         }
         context.resp = requests.post(rest_endpoint, json=payload)
         assert(context.resp.status_code == HTTP_201_CREATED)
+
+@given('the following products')
+def step_impl(context):
+    rest_endpoint = f"{context.base_url}/wishlists"
+
+    for row in context.table:
+        resp = requests.get(rest_endpoint + "?name=" + row["wishlist_name"])
+        assert(resp.status_code == HTTP_200_OK)
+
+        data = resp.json()
+        wishlist_id = data[0]["id"]
+        payload = {
+            "product_id":int(row['product_id']) ,
+            "wishlist_id": wishlist_id,
+            "product_name": row['product_name'],
+            "product_price": float(row['product_price'])
+        }
+
+        resp = requests.post(rest_endpoint + "/" + str(wishlist_id) + "/products", json=payload)
+        assert(resp.status_code == HTTP_201_CREATED)

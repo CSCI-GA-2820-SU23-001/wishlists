@@ -72,15 +72,26 @@
       -webkit-animation: fadeEffect 1s;
       animation: fadeEffect 1s;
     }
+
     /* Fade in tabs */
     @-webkit-keyframes fadeEffect {
-      from {opacity: 0;}
-      to {opacity: 1;}
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     @keyframes fadeEffect {
-      from {opacity: 0;}
-      to {opacity: 1;}
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
@@ -107,8 +118,8 @@
   </div>
 
   <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="defaultOpen">Wishlists</button>
-    <button class="tablinks" onclick="openCity(event, 'product_form_data')">Items</button>
+    <button class="tablinks" onclick="openCity(event, 'wishlist_form_data')" id="wishlist_page_btn">Wishlists</button>
+    <button class="tablinks" onclick="openCity(event, 'product_form_data')" id="items_page_btn">Items</button>
   </div>
 
   <!-- WISHLIST FORM -->
@@ -165,8 +176,9 @@
           <div class="col-sm-10">
             <table class="table table-bordered" id="product_list_result">
             </table>
-            <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Include Product</button>
-          </div>  
+            <button type="submit" class="btn btn-warning rounded-btn" id="append_product_list_btn">Include
+              Product</button>
+          </div>
         </div>
 
         <!-- SUBMIT BUTTONS -->
@@ -183,24 +195,24 @@
 
     <!-- Wishlist Search Results -->
     <table class="table table-striped" id="wishlist_search_results">
-        <thead>
-          <tr>
-            <th class="col-md-1">Wishlist ID</th>
-            <th class="col-md-1">User ID</th>
-            <th class="col-md-2">Wishlist Name</th>
-            <th class="col-md-1">Archived</th>
-            <th class="col-md-4">Items</th>
-          </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th class="col-md-1">Wishlist ID</th>
+          <th class="col-md-1">User ID</th>
+          <th class="col-md-2">Wishlist Name</th>
+          <th class="col-md-1">Archived</th>
+          <th class="col-md-4">Items</th>
+        </tr>
+      </thead>
     </table>
-    
+
   </div> <!-- end Form -->
 
   <!-- PRODUCT FORM -->
   <div class="tabcontent" id="product_form_data">
     <h3>Create, Retrieve, Update, and Delete Items:</h3>
     <div class="transparent-bg">
-      <div class="form-horizontal"> 
+      <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2" for="product_model_id">Product Model ID:</label>
           <div class="col-sm-6">
@@ -219,7 +231,8 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="wishlist_id_product_mapping">Wishlist ID:</label>
           <div class="col-sm-10">
-            <input type="number" class="form-control" id="wishlist_id_product_mapping" placeholder="Enter ID for Wishlist">
+            <input type="number" class="form-control" id="wishlist_id_product_mapping"
+              placeholder="Enter ID for Wishlist">
           </div>
         </div>
 
@@ -230,7 +243,7 @@
             <input type="number" class="form-control" id="product_id" placeholder="Enter ID for Product">
           </div>
         </div>
-        
+
         <!-- Product Name -->
         <div class="form-group">
           <label class="control-label col-sm-2" for="Product_name">Product Name:</label>
@@ -261,20 +274,20 @@
 
     <!-- Product Search Results -->
     <table class="table table-striped" id="product_search_results">
-        <thead>
-          <tr>
-            <th class="col-md-1">Product Model ID</th>
-            <th class="col-md-1">Wishlist ID</th>
-            <th class="col-md-1">Product ID</th>
-            <th class="col-md-4">Product Name</th>
-            <th class="col-md-2">Product Price</th>
-          </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th class="col-md-1">Product Model ID</th>
+          <th class="col-md-1">Wishlist ID</th>
+          <th class="col-md-1">Product ID</th>
+          <th class="col-md-4">Product Name</th>
+          <th class="col-md-2">Product Price</th>
+        </tr>
+      </thead>
     </table>
 
   </div> <!-- end Form -->
 
-  
+
 
   <footer>
     <br><br>
@@ -304,8 +317,8 @@
       evt.currentTarget.className += " active";
     }
 
-    document.getElementById("defaultOpen").click();
-    </script> 
+    document.getElementById("wishlist_page_btn").click();
+  </script>
 </body>
 
 </html>

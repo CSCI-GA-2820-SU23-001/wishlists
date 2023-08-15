@@ -75,7 +75,13 @@ def step_impl(context, element_name):
 @when('I press the "{button}" button')
 def step_impl(context, button):
     button_id = button.lower() + '_btn'
+    context.driver.find_element(By.ID, button_id).click()    
+
+@when('I press the "{button}" button of form' )
+def step_impl(context, button):
+    button_id = button.lower() + '_btn'
     context.driver.find_element(By.ID, button_id).click()
+    context.last_clicked_button = button_id
 
 @then('I should see "{text_string}" in the "{element_name}" field')
 def step_impl(context, text_string, element_name):
@@ -116,19 +122,21 @@ def step_impl(context, element_name):
     element.clear()
     element.send_keys(context.clipboard)
 
-@then('I should see "{name}" in the wishlist results')
-def step_impl(context, name):
+@then('I should see "{name}" in the "{form}" results')
+def step_impl(context, name, form):
     found = WebDriverWait(context.driver, context.wait_seconds).until(
         expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'wishlist_search_results'),
+            (By.ID, (form+'_search_results')),
             name
         )
     )
     assert(found)
 
-@then('I should not see "{name}" in the wishlist results')
-def step_impl(context, name):
-    element = context.driver.find_element(By.ID, 'wishlist_search_results')
+@then('I should not see "{name}" in the "{form}" results')
+def step_impl(context, name, form):
+    element_id = form + '_search_results'
+    print("Searching for element with ID:", element_id)
+    element = context.driver.find_element(By.ID,element_id)
     assert(name not in element.text)
 
 @when('I change the "{element_name}" to "{text_string}"')
@@ -138,3 +146,10 @@ def step_impl(context, element_name, text_string):
     element = context.driver.find_element(By.ID, element_id)
     element.clear()
     element.send_keys(text_string)
+
+@when('I visit the "{form_name}" form')
+def step_impl(context, form_name):
+    element_id = form_name.lower().replace(' ', '_') + "_form_data"
+    WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, element_id))
+    )
