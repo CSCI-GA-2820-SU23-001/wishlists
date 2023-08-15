@@ -183,7 +183,6 @@ Feature: The wishlist service back-end
         When I copy the "Wishlist Id" field
         And I press the "Items_Page" button of form
         And I paste the "Wishlist Id Product Mapping" field
-        When I set the "Product Model ID" to "22"
         When I set the "Product Name" to "delete_prod"
         When I set the "Product ID" to "9"
         And I set the "Product Price" to "25.0"
@@ -203,3 +202,30 @@ Feature: The wishlist service back-end
         And I press the "Retrieve_Product" button
         Then I should see the message "404 Not Found"
         And I should not see "Success"
+
+    Scenario: Filter items by product id
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        When I set the "Product Name" to "product_to_be_shown"
+        When I set the "Product ID" to "9"
+        And I set the "Product Price" to "25.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I press the "Clear_Product" button
+        And I paste the "Wishlist Id Product Mapping" field
+        And I set the "Product ID" to "10"
+        And I set the "Product Name" to "product_not_to_be_shown"
+        And I set the "Product Price" to "33.45"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I press the "Clear_Product" button
+        And I paste the "Wishlist Id Product Mapping" field
+        And I set the "Product Id" to "9"
+        And I press the "Search_Product" button
+        Then I should see "product_to_be_shown" in the "product" results
+        And I should not see "product_not_to_be_shown" in the "product" results
