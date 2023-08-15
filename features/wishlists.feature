@@ -174,3 +174,32 @@ Feature: The wishlist service back-end
         Then I should see the message "Success"
         Then I should see "product_55_updated" in the "product" results
         And I should not see "product_23" in the "product" results
+
+    Scenario: Delete a product under a wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        When I set the "Product Model ID" to "22"
+        When I set the "Product Name" to "delete_prod"
+        When I set the "Product ID" to "9"
+        And I set the "Product Price" to "25.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I copy the "Product Model ID" field
+        And I press the "Delete_Product" button
+        Then I should see the message "Product has been Deleted!"
+        When I paste the "Product Model ID" field
+        And I press the "Wishlist_Page" button of form
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Retrieve_Product" button
+        Then I should see the message "404 Not Found"
+        And I should not see "Success"
