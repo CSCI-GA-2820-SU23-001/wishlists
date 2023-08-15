@@ -58,7 +58,7 @@ Feature: The wishlist service back-end
         And I should see "1234" in the "Wishlist User ID" field
         And I should see "NYE Wishlist" in the "Wishlist Name" field
         And "True" should be selected in the "Wishlist Archived" field
-        
+
     Scenario: Read a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
@@ -165,6 +165,45 @@ Feature: The wishlist service back-end
         And I paste the "Wishlist Id Product Mapping" field
         And I press the "Search_Product" button
         Then I should see "product_6" in the "product" results
+
+    Scenario: Read a product in a wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        When I set the "Product Name" to "product_to_read"
+        When I set the "Product ID" to "19"
+        And I set the "Product Price" to "125.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I copy the "Product Model ID" field
+        And I press the "Clear_Product" button
+        When I paste the "Product Model ID" field
+        And I press the "Wishlist_Page" button of form
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Retrieve_Product" button
+        Then I should see the message "Success"
+        When I copy the "Product Model ID" field
+        And I press the "Clear_Product" button
+        And I paste the "Product Model ID" field
+        And I press the "Wishlist_Page" button of form
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Search_Product" button
+        Then I should see the message "Success"
+        Then I should see "product_to_read" in the "product" results
 
     Scenario: Update a product under a wishlist
         When I visit the "Home Page"
