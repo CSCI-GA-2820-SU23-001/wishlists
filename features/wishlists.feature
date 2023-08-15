@@ -73,6 +73,18 @@ Feature: The wishlist service back-end
         And I should see "1" in the "Wishlist User Id" field
         And "False" should be selected in the "Wishlist Archived" field
 
+    Scenario: Archive a Wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_1"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I press the "Archive_Wishlist" button
+        Then I should see the message "Wishlist has been Archived!"
+        And I should see "True" in the "wishlist_archived" option
+        When I press the "Unarchive_Wishlist" button
+        Then I should see the message "Wishlist has been Unarchived!"
+        And I should see "False" in the "wishlist_archived" option
+
     Scenario: Update a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
