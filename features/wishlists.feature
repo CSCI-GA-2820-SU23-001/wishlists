@@ -25,6 +25,20 @@ Feature: The wishlist service back-end
         Then I should see "Wishlists RESTful Service" in the title
         And I should not see "404 Not Found"
 
+    #########################################################
+    # B D D   F O R   W I S H L I S T S
+    #########################################################
+
+    Scenario: List all Wishlists
+        When I visit the "Home Page"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        And I should see "wishlist_1" in the "wishlist" results
+        And I should see "wishlist_2" in the "wishlist" results
+        And I should see "wishlist_3" in the "wishlist" results
+        And I should see "wishlist_4" in the "wishlist" results
+        And I should see "wishlist_5" in the "wishlist" results
+
     Scenario: Create a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist User ID" to "1234"
@@ -44,42 +58,20 @@ Feature: The wishlist service back-end
         And I should see "1234" in the "Wishlist User ID" field
         And I should see "NYE Wishlist" in the "Wishlist Name" field
         And "True" should be selected in the "Wishlist Archived" field
-
-    Scenario: Get a Wishlist by Name
+        
+    Scenario: Read a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
         And I press the "Search_Wishlist" button
         Then I should see the message "Success"
-        And I should see "wishlist_1" in the "wishlist" results
-        And I should not see "wishlist_2" in the "wishlist" results
-        And I should not see "wishlist_3" in the "wishlist" results
-        And I should not see "wishlist_4" in the "wishlist" results
-        And I should not see "wishlist_5" in the "wishlist" results
-
-    Scenario: List all Wishlists
-        When I visit the "Home Page"
-        And I press the "Search_Wishlist" button
-        Then I should see the message "Success"
-        And I should see "wishlist_1" in the "wishlist" results
-        And I should see "wishlist_2" in the "wishlist" results
-        And I should see "wishlist_3" in the "wishlist" results
-        And I should see "wishlist_4" in the "wishlist" results
-        And I should see "wishlist_5" in the "wishlist" results
-
-    Scenario: Delete a Wishlist
-        When I visit the "Home Page"
-        And I set the "Wishlist User ID" to "9876"
-        And I set the "Wishlist Name" to "Test Delete"
-        And I press the "Create_Wishlist" button
-        Then I should see the message "Success"
         When I copy the "Wishlist Id" field
         And I press the "Clear_Wishlist" button
-        Then the "Wishlist Id" field should be empty
-        And the "Wishlist User ID" field should be empty
-        And the "Wishlist Name" field should be empty
-        When I paste the "Wishlist Id" field
-        And I press the "Delete_Wishlist" button
-        Then I should see the message "Wishlist has been Deleted!"
+        And I paste the "Wishlist Id" field
+        And I press the "Retrieve_Wishlist" button
+        Then I should see the message "Success"
+        And I should see "wishlist_1" in the "Wishlist Name" field
+        And I should see "1" in the "Wishlist User Id" field
+        And "False" should be selected in the "Wishlist Archived" field
 
     Scenario: Update a Wishlist
         When I visit the "Home Page"
@@ -102,26 +94,37 @@ Feature: The wishlist service back-end
         Then I should see "wishlist_first" in the "wishlist" results
         And I should not see "wishlist_1" in the "wishlist" results
 
-    Scenario: Create a Product in a Wishlist
+    Scenario: Delete a Wishlist
         When I visit the "Home Page"
-        When I set the "Wishlist Name" to "wishlist_2"
+        And I set the "Wishlist User ID" to "9876"
+        And I set the "Wishlist Name" to "Test Delete"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Wishlist" button
+        Then the "Wishlist Id" field should be empty
+        And the "Wishlist User ID" field should be empty
+        And the "Wishlist Name" field should be empty
+        When I paste the "Wishlist Id" field
+        And I press the "Delete_Wishlist" button
+        Then I should see the message "Wishlist has been Deleted!"
+
+    Scenario: Filter Wishlists by Name
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_1"
         And I press the "Search_Wishlist" button
         Then I should see the message "Success"
-        When I copy the "Wishlist Id" field
-        And I press the "Items_Page" button of form
-        And I paste the "Wishlist Id Product Mapping" field
-        And I set the "Product ID" to "6"
-        And I set the "Product Name" to "product_6"
-        And I set the "Product Price" to "220.0"
-        And I press the "Create_Product" button
-        Then I should see the message "Success"
-        When I copy the "Wishlist Id" field
-        And I press the "Clear_Product" button
-        And I paste the "Wishlist Id Product Mapping" field
-        And I press the "Search_Product" button
-        Then I should see "product_6" in the "product" results
+        And I should see "wishlist_1" in the "wishlist" results
+        And I should not see "wishlist_2" in the "wishlist" results
+        And I should not see "wishlist_3" in the "wishlist" results
+        And I should not see "wishlist_4" in the "wishlist" results
+        And I should not see "wishlist_5" in the "wishlist" results
 
-    Scenario: Get products under the wishlist
+    #########################################################
+    # B D D   F O R   P R O D U C T S
+    #########################################################
+
+    Scenario: List products in a wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_2"
         And I press the "Search_Wishlist" button
@@ -143,6 +146,25 @@ Feature: The wishlist service back-end
         And I should not see "product_3" in the "product" results
         And I should not see "product_4" in the "product" results
         And I should not see "product_5" in the "product" results
+
+    Scenario: Create a Product in a Wishlist
+        When I visit the "Home Page"
+        When I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I set the "Product ID" to "6"
+        And I set the "Product Name" to "product_6"
+        And I set the "Product Price" to "220.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Product" button
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Search_Product" button
+        Then I should see "product_6" in the "product" results
 
     Scenario: Update a product under a wishlist
         When I visit the "Home Page"
