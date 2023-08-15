@@ -121,28 +121,25 @@ Feature: The wishlist service back-end
         And I press the "Search_Product" button
         Then I should see "product_6" in the "product" results
 
-
-# Scenario: Get products under the wishlist
-#     When I visit the "Home Page"
-#     And I set the "Wishlist Name" to "wishlist_2"
-#     And I press the "Search_Wishlist" button
-#     Then I should see the message "Success"
-#     When I copy the "Wishlist Id" field
-#     # When I copy the "Item ID" field
-#     # When I copy the "Product ID" field
-#     # When I copy the "Product Name" field
-#     # When I copy the "Product Price" field
-#     And I press the "Clear_Wishlist" button
-#     And I press the "Items_Page" button
-#     # And I paste the "Product Model ID" field
-#     And I paste the "Wishlist Id Product Mapping" field
-#     # And I paste the "Product ID" field
-#     # And I paste the "Product Name" field
-#     # And I paste the "Price" field
-#     And I press the "Search_Product" button
-#     Then I should see the message "Success"
-#     And I should see "product_1" in the product results
-#     And I should see "product_2" in the product results
-#     And I should not see "product_3" in the product results
-#     And I should not see "product_4" in the product results
-#     And I should not see "product_5" in the product results
+    Scenario: Get products under the wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I set the "Product ID" to "7"
+        And I set the "Product Name" to "product_23"
+        And I set the "Product Price" to "120.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id Product Mapping" field
+        And I press the "Clear_Product" button
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Search_Product" button
+        Then I should see the message "Success"
+        Then I should see "product_23" in the "product" results
+        And I should not see "product_3" in the "product" results
+        And I should not see "product_4" in the "product" results
+        And I should not see "product_5" in the "product" results
