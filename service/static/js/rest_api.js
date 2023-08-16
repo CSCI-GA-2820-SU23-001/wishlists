@@ -88,7 +88,7 @@ $(function () {
             <td> <input type="number" name="text" class="form-control" value=${product_id} readonly=true></td>
             <td> <input type="text" name="text" class="form-control" value=${product_name} readonly=true></td>
             <td> <input type="number" name="text" class="form-control" value=${product_price} readonly=true></td>
-            <td> <button type="submit" class="btn btn-danger remove">Remove</button></td>
+            <td> <button type="submit" class="btn btn-danger remove" disabled >Remove</button></td>
         </tr>`);
     }
 
