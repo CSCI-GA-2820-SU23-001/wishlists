@@ -20,6 +20,10 @@ To start, establish the development environment, database model was created usin
 
 [PROD- Click here to check it out](http://169.51.204.177:31002/)
 
+## Swagger Link
+
+[SWAGGER- Click here to check it out](http://169.51.204.177:31002/apidocs)
+
 ## Website
 
 ![Website](./service/static/images/website.png)
