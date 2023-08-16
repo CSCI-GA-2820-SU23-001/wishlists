@@ -120,6 +120,9 @@ Feature: The wishlist service back-end
         When I paste the "Wishlist Id" field
         And I press the "Delete_Wishlist" button
         Then I should see the message "Wishlist has been Deleted!"
+        When I set the "Wishlist Id" to "9876"
+        And I press the "Delete_Wishlist" button
+        Then I should see the message "Wishlist doesn't exist."
 
     Scenario: Filter Wishlists by Name
         When I visit the "Home Page"

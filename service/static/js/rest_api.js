@@ -239,20 +239,28 @@ $(function () {
 
         $("#flash_message").empty();
 
-        let ajax = $.ajax({
-            type: "DELETE",
+        $.ajax({
             url: `/api/wishlists/${wishlist_id}`,
-            contentType: "application/json",
-            data: '',
+            type: "GET",
         })
-        
-        ajax.done(function (res){
-            wishlist_clear_form_data()
-            flash_message("Wishlist has been Deleted!")
-        });
-
-        ajax.fail(function (res) {
-            flash_message("Server error!")
+        .done(function() {
+            return $.ajax({
+                type: "DELETE",
+                url: `/api/wishlists/${wishlist_id}`,
+                contentType: "application/json",
+                data: '',
+            });
+        })
+        .then(function() {
+            wishlist_clear_form_data();
+            flash_message("Wishlist has been Deleted!");
+        })
+        .fail(function(jqXHR) {
+            if (jqXHR.status === 404) {
+                flash_message("Wishlist doesn't exist.");
+            }else{
+                flash_message("Sever Error");
+            }
         });
     });
 
