@@ -211,11 +211,7 @@ class WishlistCollection(Resource):
         args = wishlist_args.parse_args()
         if args["wishlist_name"]:
             wishlists = Wishlist.find_by_name(args["wishlist_name"])
-            if len(wishlists) == 0:
-                abort(
-                    status.HTTP_404_NOT_FOUND,
-                    f"wishlist with '{args['wishlist_name']}' doesn't exist.")
-            wishlists = [wishlists[0].serialize()]
+            wishlists = [] if len(wishlists) == 0 else [wishlists[0].serialize()]
         else:
             # Return as an array of JSON
             wishlists = [wishlist.serialize() for wishlist in Wishlist.all()]
@@ -450,12 +446,6 @@ class ItemCollection(Resource):
         args = product_args.parse_args()
         if args["product_id"]:
             res = [product for product in res if product["product_id"] == int(args["product_id"])]
-            if len(res) == 0:
-                abort(
-                    status.HTTP_404_NOT_FOUND,
-                    f"Product with id '{args['product_id']}' cannot be found."
-                )
-
         return res, status.HTTP_200_OK
 
     # ---------------------------------------------------------------------
