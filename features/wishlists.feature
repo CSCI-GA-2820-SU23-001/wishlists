@@ -273,8 +273,8 @@ Feature: The wishlist service back-end
         And I press the "Items_Page" button of form
         And I paste the "Wishlist Id Product Mapping" field
         And I press the "Retrieve_Product" button
-        Then I should see the message "404 Not Found"
-        And I should not see "Success"
+        Then I should not see "Success"
+        And I should see the message "not found"
 
     Scenario: Filter items by product id
         When I visit the "Home Page"

@@ -184,6 +184,13 @@ class TestWishlist(unittest.TestCase):
         data["wishlist_name"] = "my_wishlist"
         self.assertRaises(DataValidationError, wishlist.deserialize, data)
 
+    def test_deserialize_wishlist_value_error(self):
+        """It should not Deserialize a wishlist with a ValueError"""
+        wishlist = Wishlist()
+        self.assertRaises(DataValidationError, wishlist.deserialize, [])
+        data = {'user_id': 777, 'wishlist_name': "", 'archived': False}
+        self.assertRaises(DataValidationError, wishlist.deserialize, data)
+
     def test_add_wishlist_product(self):
         """It should Create a Wishlist with a Product and add it to the database"""
         wishlists = Wishlist.all()
@@ -328,4 +335,6 @@ class TestWishlist(unittest.TestCase):
         """It should not Deserialize a product with a ValueError"""
         product = Product()
         data = {'product_id': 1234, 'product_name': "myProduct", 'product_price': -123.45, 'wishlist_id': 5678}
+        self.assertRaises(DataValidationError, product.deserialize, data)
+        data = {'product_id': 1234, 'product_name': "", 'product_price': 123.45, 'wishlist_id': 666}
         self.assertRaises(DataValidationError, product.deserialize, data)
