@@ -57,8 +57,9 @@ class TestWishlistServer(TestCase):
     def _create_wishlists(self, count):
         """Factory method to create accounts in bulk"""
         wishlists = []
-        for _ in range(count):
+        for i in range(count):
             wishlist = WishlistFactory()
+            wishlist.wishlist_name = f"wishlist-x-{i}"
             resp = self.client.post(BASE_URL, json=wishlist.serialize())
             self.assertEqual(
                 resp.status_code,
