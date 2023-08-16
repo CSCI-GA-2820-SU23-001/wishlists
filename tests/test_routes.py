@@ -100,7 +100,8 @@ class TestWishlistServer(TestCase):
         self.assertEqual(res.get_json()[0]['wishlist_name'], wl_name)
         wr_name = "Wringsoffhasf"
         res = self.client.get(f'{BASE_URL}?wishlist_name={wr_name}')
-        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.get_json()), 0)
 
     def test_create_a_wishlist(self):
         """ It should create a wishlist """
@@ -330,7 +331,8 @@ class TestWishlistServer(TestCase):
             f"{BASE_URL}/{wishlist.id}/products?product_id={products[0].product_id + 1}",
             content_type="application/json",
         )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(resp.get_json()), 0)
 
     def test_cannot_list_products(self):
         """ It should fail to list the products in a non-existent wishlist """
