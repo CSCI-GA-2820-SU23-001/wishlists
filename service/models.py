@@ -95,20 +95,18 @@ class Product(db.Model):
             self.product_name = data["product_name"]
             if not isinstance(self.product_name, str):
                 raise TypeError("name must be a string")
+            if len(self.product_name) == 0:
+                raise ValueError("name must be populated")
             self.product_price = data["product_price"]
             if type(self.product_price) not in [float, int]:
                 raise TypeError("price must be numeric")
             if self.product_price < 0:
                 raise ValueError("price must be strictly positive")
-        except ValueError as error:
-            raise DataValidationError(
-                "Invalid Product: " + error.args[0]
-            ) from error
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Product: missing " + error.args[0]
             ) from error
-        except TypeError as error:
+        except (ValueError, TypeError) as error:
             raise DataValidationError(
                 "Invalid Product: body of request contained bad or no data - "
                 "Error message: " + error.args[0]
@@ -139,7 +137,7 @@ class Wishlist(db.Model):
     id = primary key for user-wishlist table
     user_id = id of the user who owns the wishlist
     wishlist_name = user-assigned name of the wishlist
-    wishlist_product = collection of products in the wishlist
+    wishlist_products = collection of products in the wishlist
     """
 
     app = None
@@ -203,6 +201,8 @@ class Wishlist(db.Model):
             self.wishlist_name = data["wishlist_name"]
             if not isinstance(self.wishlist_name, str):
                 raise TypeError("name must be a string")
+            if len(self.wishlist_name) == 0:
+                raise ValueError("name must be populated")
             self.archived = data["archived"]
             if not isinstance(self.archived, bool):
                 raise TypeError("archived must be boolean")
@@ -216,7 +216,7 @@ class Wishlist(db.Model):
             raise DataValidationError(
                 "Invalid Wishlist: missing " + error.args[0]
             ) from error
-        except TypeError as error:
+        except (ValueError, TypeError) as error:
             raise DataValidationError(
                 "Invalid Wishlist: body of request contained bad or no data - "
                 "Error message: " + error.args[0]
