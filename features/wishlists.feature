@@ -59,6 +59,12 @@ Feature: The wishlist service back-end
         And I should see "NYE Wishlist" in the "Wishlist Name" field
         And "True" should be selected in the "Wishlist Archived" field
 
+    Scenario: Cannot create a Wishlist
+        When I visit the "Home Page"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Invalid Wishlist"
+        And I should not see "Success"
+
     Scenario: Read a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
