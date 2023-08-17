@@ -154,7 +154,7 @@ def step_impl(context, form_name):
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
 
-@step('I should see "{text}" in the "{field_name}" option')
+@then('I should see "{text}" in the "{field_name}" option')
 def step_impl(context, text, field_name):
     select = Select(context.driver.find_element(By.ID, field_name))
     selected_option = select.first_selected_option

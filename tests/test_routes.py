@@ -585,3 +585,13 @@ class TestWishlistServer(TestCase):
         data = response.get_json()
         self.assertEqual(data["status"], 200)
         self.assertEqual(data["message"], "Healthy")
+
+    def test_404_not_found(self):
+        """It should return 404_NOT_FOUND when a negative id is provided for items/wishlists"""
+        response = self.client.get(f"{BASE_URL}/-1")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        wishlist = self._create_wishlists(1)[0]
+        resp = self.client.get(f"{BASE_URL}/{wishlist.id}", content_type="application/json")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        response = self.client.get(f"{BASE_URL}/{wishlist.id}/products/-1")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

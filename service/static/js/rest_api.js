@@ -351,7 +351,7 @@ $(function () {
 
 
     // ****************************************
-    // TODO: update a Product
+    // Update a Product
     // ****************************************
 
     $("#update_product_btn").click(function () {
@@ -361,22 +361,6 @@ $(function () {
         let product_id = parseInt($("#product_id").val());
         let product_price = parseInt($("#product_price").val());
 
-        if (wishlist_id == "") {
-            flash_message("Error: Wishlist ID must not be empty")
-            return
-        }
-        if (product_name == "") {
-            flash_message("Error: Product Name must not be empty")
-            return
-        }
-        if (product_id == "") {
-            flash_message("Error: Product ID must not be empty")
-            return
-        }
-        if (product_price == "") {
-            flash_message("Error: Product Price must not be empty")
-            return
-        }
         let data = {
             "id": product_model_id,
             "wishlist_id": wishlist_id,
@@ -414,15 +398,7 @@ $(function () {
         product_clear_search_result();
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_model_id = $("#product_model_id").val();
-        if (wishlist_id == "") {
-            flash_message("Error: Wishlist ID must not be empty")
-            return
-        }
-
-        if (product_model_id == "") {
-            flash_message("Error: Product Model ID must not be empty")
-            return
-        }
+        
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -452,16 +428,6 @@ $(function () {
     $("#delete_product_btn").click(function () {
         let wishlist_id = $("#wishlist_id_product_mapping").val();
         let product_model_id = $("#product_model_id").val();
-
-        if (wishlist_id == "") {
-            flash_message("Error: Wishlist ID must not be empty")
-            return
-        }
-
-        if (product_model_id == "") {
-            flash_message("Error: Product Model ID must not be empty")
-            return
-        }
 
         $("#flash_message").empty();
 

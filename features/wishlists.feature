@@ -59,6 +59,16 @@ Feature: The wishlist service back-end
         And I should see "NYE Wishlist" in the "Wishlist Name" field
         And "True" should be selected in the "Wishlist Archived" field
 
+    Scenario: Cannot create a Wishlist
+        When I visit the "Home Page"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Invalid Wishlist"
+        And I should not see "Success"
+        When I set the "Wishlist User Id" to "1234"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Invalid Wishlist"
+        And I should not see "Success"
+
     Scenario: Read a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
@@ -73,6 +83,23 @@ Feature: The wishlist service back-end
         And I should see "1" in the "Wishlist User Id" field
         And "False" should be selected in the "Wishlist Archived" field
 
+    Scenario: Cannot read a Wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist User ID" to "1234"
+        And I set the "Wishlist Name" to "NYE Wishlist"
+        And I select "true" from the "Wishlist Archived"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Wishlist" button
+        And I paste the "Wishlist Id" field
+        And I press the "Delete_Wishlist" button
+        Then I should see the message "Wishlist has been Deleted!"
+        When I paste the "Wishlist Id" field
+        And I press the "Retrieve_Wishlist" button
+        Then I should see the message "could not be found"
+        And I should not see "Success"
+
     Scenario: Archive a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
@@ -85,6 +112,27 @@ Feature: The wishlist service back-end
         Then I should see the message "Wishlist has been Unarchived!"
         And I should see "False" in the "wishlist_archived" option
 
+    Scenario: Cannot archive a Wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist User ID" to "1234"
+        And I set the "Wishlist Name" to "NYE Wishlist"
+        And I select "true" from the "Wishlist Archived"
+        And I press the "Create_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Wishlist" button
+        And I paste the "Wishlist Id" field
+        And I press the "Delete_Wishlist" button
+        Then I should see the message "Wishlist has been Deleted!"
+        When I paste the "Wishlist Id" field
+        And I press the "Archive_Wishlist" button
+        Then I should see the message "could not be found"
+        And I should not see "Success"
+        When I paste the "Wishlist Id" field
+        And I press the "Unarchive_Wishlist" button
+        Then I should see the message "could not be found"
+        And I should not see "Success"
+    
     Scenario: Update a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_1"
@@ -106,6 +154,23 @@ Feature: The wishlist service back-end
         Then I should see "wishlist_first" in the "wishlist" results
         And I should not see "wishlist_1" in the "wishlist" results
 
+    Scenario: Cannot update a Wishlist
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_1"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Clear_Wishlist" button
+        Then the "Wishlist Name" field should be empty
+        When I paste the "Wishlist Id" field
+        And I press the "Retrieve_Wishlist" button
+        Then I should see "wishlist_1" in the "Wishlist Name" field
+        When I change the "Wishlist Name" to "wishlist_2"
+        And I press the "Update_Wishlist" button
+        Then I should see the message "already exists"
+        And I should not see "Success"
+        When I change the "Wishlist Name" to "wishlist_1"
+
     Scenario: Delete a Wishlist
         When I visit the "Home Page"
         And I set the "Wishlist User ID" to "9876"
@@ -120,6 +185,10 @@ Feature: The wishlist service back-end
         When I paste the "Wishlist Id" field
         And I press the "Delete_Wishlist" button
         Then I should see the message "Wishlist has been Deleted!"
+        When I paste the "Wishlist Id" field
+        And I press the "Retrieve_Wishlist" button
+        Then I should see the message "not be found"
+        And I should not see "Success"
 
     Scenario: Filter Wishlists by Name
         When I visit the "Home Page"
@@ -131,6 +200,16 @@ Feature: The wishlist service back-end
         And I should not see "wishlist_3" in the "wishlist" results
         And I should not see "wishlist_4" in the "wishlist" results
         And I should not see "wishlist_5" in the "wishlist" results
+        When I press the "Clear_Wishlist" button
+        And I set the "Wishlist Name" to "wishlist_abcd"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        And I should not see "wishlist_1" in the "wishlist" results
+        And I should not see "wishlist_2" in the "wishlist" results
+        And I should not see "wishlist_3" in the "wishlist" results
+        And I should not see "wishlist_4" in the "wishlist" results
+        And I should not see "wishlist_5" in the "wishlist" results
+        And I should not see "wishlist_abcd" in the "wishlist" results
 
     #########################################################
     # B D D   F O R   P R O D U C T S
@@ -178,6 +257,26 @@ Feature: The wishlist service back-end
         And I press the "Search_Product" button
         Then I should see "product_6" in the "product" results
 
+    Scenario: Cannot create a Product
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_3"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Create_Product" button
+        Then I should see the message "Invalid Product"
+        And I should not see "Success"
+        When I set the "Product Id" to "1212"
+        And I press the "Create_Product" button
+        Then I should see the message "Invalid Product"
+        And I should not see "Success"
+        When I set the "Product Name" to "test_product"
+        And I press the "Create_Product" button
+        Then I should see the message "Invalid Product"
+        And I should not see "Success"
+
     Scenario: Read a product in a wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_2"
@@ -217,6 +316,34 @@ Feature: The wishlist service back-end
         Then I should see the message "Success"
         Then I should see "product_to_read" in the "product" results
 
+    Scenario: Cannot read a Product
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        When I set the "Product Name" to "delete_prod"
+        When I set the "Product ID" to "9"
+        And I set the "Product Price" to "25.0"
+        And I press the "Create_Product" button
+        Then I should see the message "Success"
+        When I copy the "Product Model ID" field
+        And I press the "Delete_Product" button
+        Then I should see the message "Product has been Deleted!"
+        When I paste the "Product Model ID" field
+        And I press the "Wishlist_Page" button of form
+        And I set the "Wishlist Name" to "wishlist_2"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Retrieve_Product" button
+        Then I should see the message "was not found"
+        And I should not see "Success"
+
     Scenario: Update a product under a wishlist
         When I visit the "Home Page"
         And I set the "Wishlist Name" to "wishlist_2"
@@ -247,6 +374,19 @@ Feature: The wishlist service back-end
         Then I should see the message "Success"
         Then I should see "product_55_updated" in the "product" results
         And I should not see "product_23" in the "product" results
+
+    Scenario: Cannot update a Product
+        When I visit the "Home Page"
+        And I set the "Wishlist Name" to "wishlist_1"
+        And I press the "Search_Wishlist" button
+        Then I should see the message "Success"
+        When I copy the "Wishlist Id" field
+        And I press the "Items_Page" button of form
+        And I paste the "Wishlist Id Product Mapping" field
+        And I press the "Search_Product" button
+        When I change the "Product Price" to "-123.45"
+        And I press the "Update_Product" button
+        Then I should see the message "Invalid Product"
 
     Scenario: Delete a product under a wishlist
         When I visit the "Home Page"
